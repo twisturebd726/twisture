@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TWISTURE | ড্রপ শোল্ডার গ্রাফিক টি-শার্ট</title>
+<meta name="description" content="ডিজাইন বেছে নিন, কালার ও সাইজ সিলেক্ট করুন, WhatsApp-এ অর্ডার দিন। TWISTURE-এর 220 GSM ড্রপ শোল্ডার টি-শার্ট, অর্ডার পাওয়ার পর প্রিন্ট করা হয়।">
+<meta name="theme-color" content="#111112">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --tee:#111112;        /* tee black: hero, buttons */
+  --concrete:#dad9d3;   /* page background */
+  --paper:#f3f2ee;      /* cards, sheet */
+  --ink:#1c1c1e;        /* text */
+  --muted:#5f5f63;
+  --cobalt:#2340f0;     /* DTF print accent: selection + focus */
+  --wa:#128c4a;         /* WhatsApp button only */
+  --line:#1c1c1e;
+  --display:'Bricolage Grotesque','Hind Siliguri',system-ui,sans-serif;
+  --body:'Hind Siliguri','Bricolage Grotesque',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--concrete);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+img{max-width:100%;display:block}
+a{color:inherit}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--cobalt);outline-offset:2px}
+.wrap{width:min(1120px,100% - 32px);margin-inline:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* header */
+.top{position:sticky;top:0;z-index:20;background:var(--concrete);border-bottom:1.5px solid var(--line)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.mark{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:.02em;text-decoration:none}
+.btn-line{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:600;font-size:14px;text-decoration:none;background:transparent}
+.btn-line:hover{background:var(--tee);color:var(--paper)}
+
+/* hero: the black tee */
+.hero{background:var(--tee);color:var(--paper);position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1;padding:56px 0 120px}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,7.2vw,72px);line-height:1.08;margin:0 0 18px;max-width:14em;letter-spacing:-.01em}
+.hero p{max-width:34em;margin:0 0 28px;font-size:17px;color:#cfcfd2}
+.hero .cta{display:inline-block;background:var(--paper);color:var(--tee);font-weight:700;padding:13px 24px;border-radius:6px;text-decoration:none}
+.hero .cta:hover{background:#fff}
+.watermark{position:absolute;left:-1%;bottom:-.16em;font-family:var(--display);font-weight:800;font-size:clamp(84px,24vw,300px);line-height:.8;color:#1d1d20;white-space:nowrap;user-select:none;pointer-events:none;letter-spacing:-.03em}
+
+/* shop */
+.shop{padding:44px 0 24px}
+.section-h{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.5vw,38px);line-height:1.15;margin:0 0 6px}
+.section-sub{margin:0 0 22px;color:var(--muted)}
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;margin-bottom:6px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.chip-f{flex:none;border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:6px 16px;font-weight:600;font-size:14px}
+.chip-f[aria-pressed="true"]{background:var(--tee);color:var(--paper)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}}
+@media(min-width:1024px){.grid{grid-template-columns:repeat(4,1fr)}}
+.card{display:flex;flex-direction:column;text-align:left;padding:0;background:var(--paper);border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
+.card:hover .card-img img{transform:scale(1.03)}
+.card-img{position:relative;aspect-ratio:1/1;background:#cbcac3;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.card-img img.contain{object-fit:contain;padding:6px}
+.price-tag{position:absolute;left:0;bottom:10px;background:var(--tee);color:var(--paper);font-family:var(--display);font-weight:700;font-size:15px;padding:3px 12px 3px 10px;border-radius:0 4px 4px 0}
+.soldout-flag{position:absolute;inset:0;display:grid;place-items:center;background:rgba(17,17,18,.62);color:var(--paper);font-weight:700}
+.card-body{padding:10px 12px 12px}
+.card-name{font-family:var(--display);font-weight:700;font-size:16px;line-height:1.25;margin:0}
+.card-cat{font-size:13px;color:var(--muted)}
+.state{grid-column:1/-1;padding:40px 0;text-align:center;color:var(--muted)}
+
+/* how to order: garment hang tag */
+.how{padding:36px 0 56px}
+.tag{position:relative;max-width:560px;margin:0 auto;background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:52px 26px 26px;transform:rotate(-1.2deg)}
+.tag::before{content:"";position:absolute;top:16px;left:50%;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--concrete);border:1.5px solid var(--line)}
+.tag h2{font-family:var(--display);font-weight:800;font-size:24px;margin:0 0 14px;text-align:center}
+.tag ol{margin:0;padding-left:1.3em}
+.tag li{margin-bottom:8px}
+.tag li::marker{font-family:var(--display);font-weight:800}
+
+/* fabric */
+.fabric{background:var(--paper);border-block:1.5px solid var(--line);padding:48px 0}
+.fabric-grid{display:grid;gap:28px}
+@media(min-width:860px){.fabric-grid{grid-template-columns:1.2fr 1fr;align-items:start}}
+.video{position:relative;aspect-ratio:16/9;background:var(--tee);border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.photos img{aspect-ratio:1/1;object-fit:cover;width:100%;border:1.5px solid var(--line);border-radius:4px}
+.spec{margin:0;display:grid;grid-template-columns:auto 1fr;gap:0}
+.spec dt,.spec dd{margin:0;padding:11px 0;border-bottom:1px solid #b9b8b1}
+.spec dt{font-weight:700;padding-right:22px}
+.link-plain{display:inline-block;margin-top:14px;font-weight:600}
+
+/* faq */
+.faq{padding:48px 0 40px}
+.faq details{border-bottom:1.5px solid var(--line);padding:14px 0}
+.faq summary{font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--display);font-weight:700}
+.faq details[open] summary::after{content:"−"}
+.faq details p{margin:10px 0 0;color:var(--muted)}
+
+footer{background:var(--tee);color:#cfcfd2;padding:34px 0 40px}
+footer .wrap{display:flex;flex-wrap:wrap;gap:14px 28px;justify-content:space-between;align-items:center}
+footer .mark{color:var(--paper)}
+footer a{text-decoration:none;font-weight:500}
+footer a:hover{color:#fff;text-decoration:underline}
+.links{display:flex;gap:20px;flex-wrap:wrap}
+
+/* order sheet */
+dialog{border:1.5px solid var(--line);padding:0;background:var(--paper);color:var(--ink);width:100%;max-width:100%;max-height:92vh;margin:auto 0 0;border-radius:16px 16px 0 0;overflow:auto}
+dialog::backdrop{background:rgba(17,17,18,.66)}
+dialog[open]{animation:sheet .22s ease-out}
+@keyframes sheet{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:860px){
+  dialog{max-width:900px;margin:auto;border-radius:10px;max-height:88vh}
+}
+@media(prefers-reduced-motion:reduce){dialog[open]{animation:none}html{scroll-behavior:auto}.card-img img{transition:none}}
+.sheet{display:grid}
+@media(min-width:860px){.sheet{grid-template-columns:1fr 1fr}}
+.sheet-media{background:#cbcac3;padding:14px}
+.sheet-media .main{width:100%;aspect-ratio:1/1;object-fit:contain;background:#cbcac3}
+.thumbs{display:flex;gap:8px;margin-top:10px}
+.thumb{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:5px 14px;font-size:14px;font-weight:600}
+.thumb[aria-pressed="true"]{background:var(--tee);color:var(--paper)}
+.sheet-form{padding:20px 18px 22px;position:relative}
+.close{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper);font-size:20px;line-height:1}
+.sheet-form h2{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.15;margin:0 40px 2px 0}
+.sheet-price{font-family:var(--display);font-weight:700;font-size:20px;margin:0 0 16px}
+fieldset{border:0;margin:0 0 16px;padding:0}
+legend{font-weight:700;margin-bottom:8px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:inline-flex;align-items:center;gap:8px;min-width:48px;justify-content:center;border:1.5px solid var(--line);border-radius:6px;padding:7px 16px;font-weight:600;background:var(--paper);cursor:pointer}
+.opt input:checked + span{background:var(--tee);color:var(--paper);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--cobalt)}
+.opt input:focus-visible + span{outline:3px solid var(--cobalt);outline-offset:3px}
+.dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #8b8b8b;flex:none}
+.qty{display:inline-flex;align-items:center;border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
+.qty button{width:42px;height:40px;border:0;background:transparent;font-size:20px;font-weight:700}
+.qty button:hover{background:#e2e1db}
+.qty output{min-width:40px;text-align:center;font-weight:700}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1.5px solid var(--line);padding-top:12px;margin:6px 0 4px;font-weight:600}
+.total strong{font-family:var(--display);font-size:24px}
+.note{font-size:14px;color:var(--muted);margin:0 0 14px}
+.order-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:var(--wa);color:#fff;font-weight:700;font-size:17px;text-decoration:none;padding:14px 18px;border-radius:8px}
+.order-btn:hover{filter:brightness(1.08)}
+.order-btn[aria-disabled="true"]{background:#9c9c9c;pointer-events:none}
+.hint{min-height:1.6em;font-size:14px;color:var(--cobalt);font-weight:600;margin:8px 0 0;text-align:center}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="mark" href="#top">TWISTURE</a>
+    <a class="btn-line" id="hdrWa" href="#" target="_blank" rel="noopener">WhatsApp-এ কথা বলুন</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>ডিজাইন বেছে নিন। আপনার জন্য প্রিন্ট করব।</h1>
+      <p id="heroSub">220 GSM ড্রপ শোল্ডার টি-শার্ট। অর্ডার পাওয়ার পর প্রিন্ট করা হয়।</p>
+      <a class="cta" href="#shop">ডিজাইন দেখুন</a>
+    </div>
+    <div class="watermark" aria-hidden="true">TWISTURE</div>
+  </section>
+
+  <section class="shop" id="shop">
+    <div class="wrap">
+      <h2 class="section-h">সব ডিজাইন</h2>
+      <p class="section-sub">পছন্দের ডিজাইনে ট্যাপ করুন, কালার ও সাইজ বেছে WhatsApp-এ অর্ডার পাঠান।</p>
+      <div class="filters" id="filters" role="group" aria-label="ক্যাটাগরি"></div>
+      <div class="grid" id="grid" aria-live="polite">
+        <p class="state">ডিজাইন লোড হচ্ছে…</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how">
+    <div class="wrap">
+      <div class="tag">
+        <h2>অর্ডার করবেন যেভাবে</h2>
+        <ol>
+          <li>পছন্দের ডিজাইনে ট্যাপ করুন।</li>
+          <li>কালার, সাইজ আর কয়টি লাগবে সিলেক্ট করুন।</li>
+          <li>“WhatsApp-এ অর্ডার করুন” চাপুন। মেসেজ তৈরি হয়ে থাকবে, শুধু নাম ও ঠিকানা লিখে পাঠান।</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="fabric" id="fabric">
+    <div class="wrap">
+      <h2 class="section-h">কাপড়টা নিজের চোখে দেখুন</h2>
+      <p class="section-sub">আসল কাপড়ের ভিডিও ও ছবি। কোনো এডিট বা ফিল্টার ছাড়া।</p>
+      <div class="fabric-grid">
+        <div>
+          <div class="video" id="videoBox"></div>
+          <div class="photos" id="fabricPhotos"></div>
+        </div>
+        <div>
+          <dl class="spec">
+            <dt>কাপড়ের ওজন</dt><dd>220 GSM</dd>
+            <dt>ফিট</dt><dd>ওভারসাইজড ড্রপ শোল্ডার</dd>
+            <dt>প্রিন্ট</dt><dd>DTF প্রিন্ট</dd>
+            <dt>প্রিন্ট কখন</dt><dd>অর্ডার পাওয়ার পর</dd>
+            <dt>ডেলিভারি সময়</dt><dd id="specDelivery">৩-৪ দিন</dd>
+          </dl>
+          <a class="link-plain" id="sizeChartLink" href="#" target="_blank" rel="noopener" hidden>সাইজ চার্ট দেখুন</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <h2 class="section-h">সাধারণ প্রশ্ন</h2>
+      <details><summary>কতদিনে পাব?</summary><p id="faqTime">ডেলিভারি সময় ৩-৪ দিন।</p></details>
+      <details><summary>ডেলিভারি চার্জ কত?</summary><p id="faqCharge"></p></details>
+      <details><summary>ডিজাইন কি আগে থেকে প্রিন্ট করা থাকে?</summary><p>না। অর্ডার পাওয়ার পর আপনার সাইজ ও কালারে প্রিন্ট করা হয়। তাই ডিজাইন আর সাইজ ঠিক আছে কিনা অর্ডারের আগে দেখে নিন।</p></details>
+      <details><summary>পেমেন্ট কীভাবে করব?</summary><p id="faqPay"></p></details>
+      <details><summary>অর্ডার কনফার্ম হবে কীভাবে?</summary><p>WhatsApp-এ আপনার মেসেজ পেলে আমরা সেখানেই কনফার্ম করে জানাব।</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="mark">TWISTURE</span>
+    <div class="links" id="footLinks"></div>
+  </div>
+</footer>
+
+<dialog id="sheet" aria-labelledby="sheetName">
+  <div class="sheet">
+    <div class="sheet-media">
+      <img class="main" id="sheetImg" alt="">
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <form class="sheet-form" id="orderForm" onsubmit="return false">
+      <button type="button" class="close" id="closeBtn" aria-label="বন্ধ করুন">×</button>
+      <h2 id="sheetName"></h2>
+      <p class="sheet-price" id="sheetPrice"></p>
+
+      <fieldset><legend>কালার</legend><div class="opts" id="colorOpts"></div></fieldset>
+      <fieldset><legend>সাইজ</legend><div class="opts" id="sizeOpts"></div></fieldset>
+      <fieldset>
+        <legend>কয়টি লাগবে</legend>
+        <div class="qty">
+          <button type="button" id="qMinus" aria-label="কমান">−</button>
+          <output id="qVal">1</output>
+          <button type="button" id="qPlus" aria-label="বাড়ান">+</button>
+        </div>
+      </fieldset>
+
+      <div class="total"><span>মোট (ডেলিভারি ছাড়া)</span><strong id="totalVal"></strong></div>
+      <p class="note" id="chargeNote"></p>
+      <a class="order-btn" id="orderBtn" href="#" target="_blank" rel="noopener" aria-disabled="true">WhatsApp-এ অর্ডার করুন</a>
+      <p class="hint" id="hint" role="status"></p>
+    </form>
+  </div>
+</dialog>
+
+<script>
+/* =========================================================
+   TWISTURE settings
+   1) SHEET_ID: Google Sheet-এর link থেকে /d/ এবং /edit এর মাঝের অংশটা এখানে বসাও
+   2) বাকি সব তথ্য Sheet-এর "settings" tab থেকেও বদলানো যায় (key, value)
+   ========================================================= */
+const CONFIG = {
+  SHEET_ID: "1dHPaQBfzByYZxVeA1650_L8xskfxCTjb1bc_5fM5jWo",
+  TAB_DESIGNS: "designs",
+  TAB_SETTINGS: "settings",
+  defaults: {
+    whatsapp: "8801606391253",
+    delivery_time: "৩-৪ দিন",
+    delivery_in: "120",
+    delivery_out: "135",
+    video_url: "https://youtu.be/8nB0IlEWOlg",
+    fabric_images: "",
+    size_chart_image: "",
+    payment_note: "অর্ডার কনফার্ম করার সময় WhatsApp-এ পেমেন্টের নিয়ম জানানো হবে।",
+    facebook: "https://www.facebook.com/profile.php?id=61575888545710"
+  }
+};
+
+/* Sheet কাজ না করলে (বা SHEET_ID ফাঁকা থাকলে) এই নমুনা ডিজাইন দেখাবে */
+const FALLBACK_DESIGNS = [{
+  id: "1", name: "Uchiha Madara", category: "Anime", price: 350,
+  image: "", mockup: "https://res.cloudinary.com/gxunvfry/image/upload/v1790701522/20260919_145715.png",
+  colors: "Black", size: "M,L,XL", status: "available"
+}];
+
+const S = {designs: [], settings: {...CONFIG.defaults}, filter: "সব", current: null, color: "", size: "", qty: 1};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
+const digits = v => String(v || "").replace(/\D/g, "");
+
+/* Cloudinary ছবি নিজে থেকেই হালকা ও দ্রুত করা হয় */
+function opt(url, w) {
+  url = String(url || "").trim();
+  const m = url.match(/^(https:\/\/res\.cloudinary\.com\/[^/]+\/image\/upload\/)(v\d+\/.+)$/);
+  return m ? `${m[1]}f_auto,q_auto,w_${w}/${m[2]}` : url;
+}
+
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i+1] === '"') { cell += '"'; i++; } else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i+1] === "\n") i++;
+      row.push(cell); rows.push(row); row = []; cell = "";
+    } else cell += c;
+  }
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+async function fetchTab(tab) {
+  const url = `https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Sheet পড়া যায়নি: " + tab);
+  return parseCSV(await res.text());
+}
+
+async function loadData() {
+  if (!CONFIG.SHEET_ID) { S.designs = FALLBACK_DESIGNS; return; }
+  try {
+    const rows = await fetchTab(CONFIG.TAB_DESIGNS);
+    const head = rows[0].map(h => h.trim().toLowerCase());
+    S.designs = rows.slice(1).map(r => {
+      const o = {}; head.forEach((h, i) => o[h] = (r[i] || "").trim()); return o;
+    }).filter(d => d.name && (d.status || "").toLowerCase() !== "hidden");
+    if (!S.designs.length) S.designs = FALLBACK_DESIGNS;
+  } catch (e) {
+    console.warn(e); S.designs = FALLBACK_DESIGNS;
+  }
+  try {
+    const rows = await fetchTab(CONFIG.TAB_SETTINGS);
+    rows.forEach(([k, v]) => { if (k && v && k.trim().toLowerCase() !== "key") S.settings[k.trim()] = v.trim(); });
+  } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
+}
+
+const isSold = d => /sold|out|শেষ/i.test(d.status || "");
+const money = n => "৳" + Number(n || 0).toLocaleString("en-US");
+const waLink = text => `https://wa.me/${digits(S.settings.whatsapp)}${text ? "?text=" + encodeURIComponent(text) : ""}`;
+
+/* ---------- page content ---------- */
+function renderStatic() {
+  const s = S.settings;
+  $("hdrWa").href = waLink("হ্যালো TWISTURE, আমি একটা বিষয়ে জানতে চাই।");
+  $("heroSub").textContent = `220 GSM ড্রপ শোল্ডার টি-শার্ট। অর্ডার পাওয়ার পর প্রিন্ট করা হয়। ডেলিভারি সময় ${s.delivery_time}।`;
+  $("specDelivery").textContent = s.delivery_time;
+  $("faqTime").textContent = `অর্ডার কনফার্মের পর ডেলিভারি সময় ${s.delivery_time}।`;
+  $("faqCharge").textContent = `গাজীপুরের ভেতরে ${money(s.delivery_in)}, গাজীপুরের বাইরে ${money(s.delivery_out)} (১ কেজি পর্যন্ত)।`;
+  $("faqPay").textContent = s.payment_note;
+  $("chargeNote").textContent = `ডেলিভারি চার্জ আলাদা: গাজীপুরের ভেতরে ${money(s.delivery_in)}, বাইরে ${money(s.delivery_out)}।`;
+
+  const vid = (s.video_url.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/) || [])[1];
+  if (vid) $("videoBox").innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${vid}" title="TWISTURE কাপড়ের রিভিউ" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+  else $("videoBox").hidden = true;
+
+  $("fabricPhotos").innerHTML = list(s.fabric_images).map(u => `<img loading="lazy" src="${esc(opt(u, 500))}" alt="কাপড়ের ক্লোজ-আপ">`).join("");
+  if (s.size_chart_image) { const a = $("sizeChartLink"); a.href = s.size_chart_image; a.hidden = false; }
+
+  const links = [`<a href="${esc(waLink(""))}" target="_blank" rel="noopener">WhatsApp</a>`];
+  if (s.facebook) links.push(`<a href="${esc(s.facebook)}" target="_blank" rel="noopener">Facebook</a>`);
+  if (s.tiktok) links.push(`<a href="${esc(s.tiktok)}" target="_blank" rel="noopener">TikTok</a>`);
+  if (s.instagram) links.push(`<a href="${esc(s.instagram)}" target="_blank" rel="noopener">Instagram</a>`);
+  if (s.youtube) links.push(`<a href="${esc(s.youtube)}" target="_blank" rel="noopener">YouTube</a>`);
+  $("footLinks").innerHTML = links.join("");
+}
+
+function renderFilters() {
+  const cats = ["সব", ...new Set(S.designs.map(d => d.category).filter(Boolean))];
+  $("filters").hidden = cats.length < 3;
+  $("filters").innerHTML = cats.map(c => `<button type="button" class="chip-f" aria-pressed="${c === S.filter}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+}
+
+function renderGrid() {
+  const items = S.designs.filter(d => S.filter === "সব" || d.category === S.filter);
+  if (!items.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; return; }
+  $("grid").innerHTML = items.map(d => {
+    const src = d.image || d.mockup;
+    const contain = !d.image && d.mockup ? " contain" : "";
+    return `<button type="button" class="card" data-id="${esc(d.id || d.name)}" ${isSold(d) ? "" : ""}>
+      <span class="card-img">
+        <img loading="lazy" class="${contain.trim()}" src="${esc(opt(src, 600))}" alt="${esc(d.name)} টি-শার্ট">
+        <span class="price-tag">${money(d.price)}</span>
+        ${isSold(d) ? `<span class="soldout-flag">স্টক শেষ</span>` : ""}
+      </span>
+      <span class="card-body">
+        <h3 class="card-name">${esc(d.name)}</h3>
+        <span class="card-cat">${esc(d.category)}</span>
+      </span>
+    </button>`;
+  }).join("");
+}
+
+/* ---------- order sheet ---------- */
+const COLORS = {black:"#111",white:"#fff",red:"#c62828",blue:"#1e40af",navy:"#1b2a4a",green:"#2e7d32",grey:"#8a8a8a",gray:"#8a8a8a",maroon:"#6d1b2b",beige:"#d8c8a8",cream:"#efe6cf",yellow:"#e6c229",brown:"#5b3a29",olive:"#5a5f2b",pink:"#e79ab5",purple:"#5e3a8c",orange:"#e07b2a"};
+function radios(name, values, withDot) {
+  return values.map(v => `<label class="opt"><input type="radio" name="${name}" value="${esc(v)}"><span>${withDot ? `<i class="dot" style="background:${COLORS[v.toLowerCase()] || "#bbb"}"></i>` : ""}${esc(v)}</span></label>`).join("");
+}
+function showImg(src) { $("sheetImg").src = opt(src, 900); }
+
+function openSheet(d) {
+  S.current = d; S.qty = 1; S.color = ""; S.size = "";
+  const colors = list(d.colors), sizes = list(d.size || d.sizes);
+  $("sheetName").textContent = d.name;
+  $("sheetPrice").textContent = money(d.price);
+  $("sheetImg").alt = d.name + " টি-শার্ট";
+
+  const imgs = [];
+  if (d.image) imgs.push(["ডিজাইন", d.image]);
+  if (d.mockup) imgs.push(["পরলে যেমন দেখায়", d.mockup]);
+  if (!imgs.length) imgs.push(["", ""]);
+  showImg(imgs[0][1]);
+  $("thumbs").innerHTML = imgs.length > 1 ? imgs.map((im, i) => `<button type="button" class="thumb" aria-pressed="${i === 0}" data-src="${esc(im[1])}">${esc(im[0])}</button>`).join("") : "";
+
+  $("colorOpts").innerHTML = radios("color", colors, true);
+  $("sizeOpts").innerHTML = radios("size", sizes, false);
+  if (colors.length === 1) { S.color = colors[0]; $("colorOpts").querySelector("input").checked = true; }
+  if (sizes.length === 1) { S.size = sizes[0]; $("sizeOpts").querySelector("input").checked = true; }
+  updateOrder();
+  $("sheet").showModal();
+}
+
+function updateOrder() {
+  const d = S.current; if (!d) return;
+  $("qVal").textContent = S.qty;
+  $("totalVal").textContent = money(Number(d.price) * S.qty);
+  const btn = $("orderBtn");
+  if (isSold(d)) {
+    btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href");
+    $("hint").textContent = "এই ডিজাইনের স্টক এখন শেষ।"; return;
+  }
+  if (!S.color || !S.size) {
+    btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href");
+    $("hint").textContent = !S.color ? "আগে কালার বেছে নিন" : "এবার সাইজ বেছে নিন";
+    return;
+  }
+  const msg = [
+    "হ্যালো TWISTURE! আমি অর্ডার করতে চাই।",
+    "",
+    `ডিজাইন: ${d.name}`,
+    `কালার: ${S.color}`,
+    `সাইজ: ${S.size}`,
+    `পরিমাণ: ${S.qty}টি`,
+    `দাম: ${money(Number(d.price) * S.qty)} (ডেলিভারি চার্জ আলাদা)`,
+    "",
+    "নাম:",
+    "ফোন নম্বর:",
+    "সম্পূর্ণ ঠিকানা:"
+  ].join("\n");
+  btn.href = waLink(msg);
+  btn.setAttribute("aria-disabled", "false");
+  $("hint").textContent = "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
+}
+
+/* ---------- events ---------- */
+$("filters").addEventListener("click", e => {
+  const b = e.target.closest("button[data-c]"); if (!b) return;
+  S.filter = b.dataset.c; renderFilters(); renderGrid();
+});
+$("grid").addEventListener("click", e => {
+  const b = e.target.closest(".card"); if (!b) return;
+  const d = S.designs.find(x => String(x.id || x.name) === b.dataset.id); if (d) openSheet(d);
+});
+$("thumbs").addEventListener("click", e => {
+  const b = e.target.closest(".thumb"); if (!b) return;
+  showImg(b.dataset.src);
+  $("thumbs").querySelectorAll(".thumb").forEach(t => t.setAttribute("aria-pressed", t === b));
+});
+$("orderForm").addEventListener("change", e => {
+  if (e.target.name === "color") S.color = e.target.value;
+  if (e.target.name === "size") S.size = e.target.value;
+  updateOrder();
+});
+$("qMinus").onclick = () => { S.qty = Math.max(1, S.qty - 1); updateOrder(); };
+$("qPlus").onclick = () => { S.qty = Math.min(20, S.qty + 1); updateOrder(); };
+$("closeBtn").onclick = () => $("sheet").close();
+$("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").close(); });
+
+(async function init() {
+  await loadData();
+  renderStatic(); renderFilters(); renderGrid();
+})();
+</script>
+</body>
+</html>
