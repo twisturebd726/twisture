@@ -360,7 +360,7 @@ const waLink = text => `https://wa.me/${digits(S.settings.whatsapp)}${text ? "?t
 function renderStatic() {
   const s = S.settings;
   $("hdrWa").href = waLink("হ্যালো TWISTURE, আমি একটা বিষয়ে জানতে চাই।");
-  $("heroSub").textContent = `220 GSM ড্রপ শোল্ডার টি-শার্ট। অর্ডার পাওয়ার পর প্রিন্ট করা হয়। ডেলিভারি সময় ${s.delivery_time}।`;
+  $("heroSub").textContent = `Trending Premium Men's Clothing In Reasonable Price! ডেলিভারি সময় ${s.delivery_time}।`;
   $("specDelivery").textContent = s.delivery_time;
   $("faqTime").textContent = `অর্ডার কনফার্মের পর ডেলিভারি সময় ${s.delivery_time}।`;
   $("faqCharge").textContent = `গাজীপুরের ভেতরে ${money(s.delivery_in)}, গাজীপুরের বাইরে ${money(s.delivery_out)} (১ কেজি পর্যন্ত)।`;
