@@ -72,20 +72,21 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* shop */
 .shop{padding:48px 0 28px}
+section[id]{scroll-margin-top:72px}
 .section-h{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.5vw,38px);line-height:1.15;margin:0 0 6px}
 .section-sub{margin:0 0 22px;color:var(--muted)}
 .filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;margin-bottom:6px;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
 .chip-f{flex:none;border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:6px 16px;font-weight:600;font-size:14px}
 .chip-f[aria-pressed="true"]{background:var(--tee);color:var(--paper)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(min-width:720px){.grid{grid-template-columns:repeat(3,1fr);gap:18px}}
-@media(min-width:1024px){.grid{grid-template-columns:repeat(4,1fr)}}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:480px){.grid{grid-template-columns:repeat(2,1fr);gap:14px}}
+@media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr);gap:20px}}
 .card{display:flex;flex-direction:column;text-align:left;padding:0;background:var(--paper);border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
 .card:hover .card-img img{transform:scale(1.03)}
-.card-img{position:relative;aspect-ratio:1/1;background:#cbcac3;overflow:hidden}
+.card-img{position:relative;aspect-ratio:4/3;background:var(--tee);overflow:hidden}
 .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
-.card-img img.contain{object-fit:contain;padding:6px}
+.card-img img.contain{object-fit:contain;padding:12px}
 .price-tag{position:absolute;left:0;bottom:10px;background:var(--tee);color:var(--paper);font-family:var(--display);font-weight:700;font-size:15px;padding:3px 12px 3px 10px;border-radius:0 4px 4px 0}
 .soldout-flag{position:absolute;inset:0;display:grid;place-items:center;background:rgba(17,17,18,.62);color:var(--paper);font-weight:700}
 .card-body{padding:10px 12px 12px}
@@ -143,14 +144,22 @@ dialog[open]{animation:sheet .22s ease-out}
 @media(prefers-reduced-motion:reduce){dialog[open]{animation:none}html{scroll-behavior:auto}.card-img img{transition:none}}
 .sheet{display:grid}
 @media(min-width:860px){.sheet{grid-template-columns:1fr 1fr}}
-.sheet-media{background:#cbcac3;padding:14px}
-.stage{position:relative;width:100%;aspect-ratio:1/1;background:#cbcac3;overflow:hidden}
-.stage img{width:100%;height:100%;object-fit:contain}
-.stage.is-video{background:var(--tee)}
+.sheet-media{align-self:start;padding:16px 16px 4px}
+@media(min-width:860px){.sheet-media{position:sticky;top:0;padding:20px 8px 20px 20px}}
+.stage{position:relative;width:100%;aspect-ratio:4/3;background:var(--tee);overflow:hidden;border:1.5px solid var(--line);border-radius:8px}
+.stage img{width:100%;height:100%;object-fit:cover}
+.stage img.fit{object-fit:contain;padding:14px}
 .stage iframe{position:absolute;left:0;top:50%;width:100%;aspect-ratio:16/9;transform:translateY(-50%);border:0}
-.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.thumb{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:5px 14px;font-size:14px;font-weight:600}
-.thumb[aria-pressed="true"]{background:var(--tee);color:var(--paper)}
+.thumbs{display:flex;gap:10px;margin-top:12px}
+.thumb{flex:1 1 0;max-width:120px;min-width:0;padding:0;border:0;background:transparent;text-align:center}
+.th-img{position:relative;display:block;aspect-ratio:4/3;border:1.5px solid var(--line);border-radius:6px;overflow:hidden;background:var(--tee)}
+.th-img img{width:100%;height:100%;object-fit:cover}
+.th-img img.fit{object-fit:contain;padding:4px}
+.th-img .play{position:absolute;inset:0;margin:auto;width:28px;height:28px;border-radius:50%;background:rgba(243,242,238,.92)}
+.th-img .play::after{content:"";position:absolute;left:11px;top:8px;border-left:10px solid var(--tee);border-top:6px solid transparent;border-bottom:6px solid transparent}
+.th-label{display:block;margin-top:5px;font-size:13px;line-height:1.3;font-weight:600;color:var(--muted)}
+.thumb[aria-pressed="true"] .th-img{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--cobalt)}
+.thumb[aria-pressed="true"] .th-label{color:var(--ink)}
 .sheet-form{padding:20px 18px 22px;position:relative}
 .close{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--paper);font-size:20px;line-height:1}
 .sheet-form h2{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.15;margin:0 40px 2px 0}
@@ -164,6 +173,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
 .opt small{font-weight:500;color:var(--muted);font-size:13px}
 .opt input:checked + span{background:var(--tee);color:var(--paper);box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--cobalt)}
 .opt input:checked + span small{color:#cfcfd2}
+.opt input:checked + span .dot{border-color:var(--paper)}
 .opt input:disabled + span{opacity:.45;cursor:not-allowed;text-decoration:line-through}
 .opt input:focus-visible + span{outline:3px solid var(--cobalt);outline-offset:3px}
 .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #8b8b8b;flex:none}
@@ -475,7 +485,7 @@ function renderGrid() {
   const items = S.designs.filter(d => S.filter === "সব" || d.category === S.filter);
   if (!items.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; return; }
   $("grid").innerHTML = items.map(d => {
-    const src = d.image || d.mockup, contain = !d.image && d.mockup;
+    const src = d.mockup || d.image, contain = !d.mockup;
     return `<button type="button" class="card" data-id="${esc(d.id || d.name)}">
       <span class="card-img">
         <img loading="lazy" class="${contain ? "contain" : ""}" src="${esc(opt(src, 600))}" alt="${esc(d.name)} টি-শার্ট">
@@ -523,24 +533,33 @@ function renderOptions() {
   $("sizeOpts").innerHTML = radios("size", sizes.map(v => ({v, on: same(v, S.size)})));
 }
 
+function paintStage() {
+  const st = $("stage");
+  if (S.media !== "image") { st.style.background = ""; return; }
+  const d = S.current, first = optionsFor(d, curFab(), "colors")[0];
+  const c = S.color || first || "";
+  st.style.background = COLORS[c.toLowerCase()] || "#111112";
+}
+
 function renderMedia() {
   const d = S.current, f = curFab(), items = [];
-  if (d.image) items.push({k: "image", label: "ডিজাইন", src: d.image});
-  if (d.mockup) items.push({k: "mockup", label: "পরলে যেমন দেখায়", src: d.mockup});
+  /* ক্রম: পরলে কেমন দেখায় -> ডিজাইন -> কাপড়ের ভিডিও */
+  if (d.mockup) items.push({k: "mockup", label: "পরলে কেমন দেখায়", src: d.mockup, thumb: d.mockup});
+  if (d.image) items.push({k: "image", label: "ডিজাইন", src: d.image, thumb: d.image, fit: true});
   const vid = f && ytId(f.video);
-  if (vid) items.push({k: "video", label: `${gsmLabel(f)} কাপড়ের ভিডিও`, vid});
-  if (!items.length) items.push({k: "none"});
+  if (vid) items.push({k: "video", label: `${gsmLabel(f)} ভিডিও`, vid, thumb: `https://i.ytimg.com/vi/${vid}/mqdefault.jpg`});
+  if (!items.length) items.push({k: "none", label: ""});
   if (!items.some(i => i.k === S.media)) S.media = items[0].k;
   const it = items.find(i => i.k === S.media);
-  $("thumbs").innerHTML = items.length > 1 ? items.map(i => `<button type="button" class="thumb" data-k="${i.k}" aria-pressed="${i.k === S.media}">${esc(i.label)}</button>`).join("") : "";
+  $("thumbs").innerHTML = items.length > 1 ? items.map(i => `<button type="button" class="thumb" data-k="${i.k}" aria-pressed="${i.k === S.media}"><span class="th-img"><img loading="lazy" class="${i.fit ? "fit" : ""}" src="${esc(opt(i.thumb, 240))}" alt="">${i.k === "video" ? `<i class="play"></i>` : ""}</span><span class="th-label">${esc(i.label)}</span></button>`).join("") : "";
   const key = it.k + (it.src || it.vid || "");
-  if (key === S.stageKey) return;
-  S.stageKey = key;
-  const st = $("stage");
-  st.classList.toggle("is-video", it.k === "video");
-  st.innerHTML = it.k === "video"
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${it.vid}?rel=0" title="${esc(it.label)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
-    : it.src ? `<img src="${esc(opt(it.src, 900))}" alt="${esc(d.name)} টি-শার্ট">` : "";
+  if (key !== S.stageKey) {
+    S.stageKey = key;
+    $("stage").innerHTML = it.k === "video"
+      ? `<iframe src="https://www.youtube-nocookie.com/embed/${it.vid}?rel=0" title="${esc(it.label)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+      : it.src ? `<img class="${it.fit ? "fit" : ""}" src="${esc(opt(it.src, 900))}" alt="${esc(d.name)} টি-শার্ট">` : "";
+  }
+  paintStage();
 }
 
 function openSheet(d) {
@@ -605,7 +624,7 @@ $("thumbs").addEventListener("click", e => { const b = e.target.closest(".thumb"
 $("orderForm").addEventListener("change", e => {
   const n = e.target.name, v = e.target.value;
   if (n === "gsm") { S.gsm = v; renderOptions(); renderMedia(); }
-  if (n === "color") S.color = v;
+  if (n === "color") { S.color = v; paintStage(); }
   if (n === "size") S.size = v;
   if (n === "area") S.area = v;
   updateOrder();
