@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TWISTURE | গ্রাফিক টি-শার্ট অনলাইন স্টোর</title>
-<meta name="description" content="TWISTURE-এর অনলাইন স্টোর। নানা স্টাইলের গ্রাফিক টি-শার্ট, পছন্দের GSM, কালার ও সাইজে। WhatsApp-এ সহজ অর্ডার।">
+<title>TWISTURE | ক্লদিং ও অ্যাপারেল অনলাইন স্টোর</title>
+<meta name="description" content="TWISTURE-এর ক্লদিং ও অ্যাপারেল স্টোর। ট্রেন্ডি ডিজাইনের পোশাক, কাপড়ের আসল ভিডিওসহ। কালার ও সাইজ বেছে WhatsApp বা Messenger-এ সহজ অর্ডার।">
 <meta name="theme-color" content="#111112">
 <meta property="og:type" content="website">
-<meta property="og:title" content="TWISTURE | গ্রাফিক টি-শার্ট">
-<meta property="og:description" content="পছন্দের ডিজাইন, GSM, কালার ও সাইজে টি-শার্ট। WhatsApp-এ সহজ অর্ডার।">
+<meta property="og:title" content="TWISTURE | ক্লদিং ও অ্যাপারেল স্টোর">
+<meta property="og:description" content="ট্রেন্ডি ডিজাইনের পোশাক, কাপড়ের আসল ভিডিওসহ। কালার ও সাইজ বেছে সহজ অর্ডার।">
 <meta property="og:image" content="https://twisturebd726.github.io/twisture/og.png">
 <meta property="og:url" content="https://twisturebd726.github.io/twisture/">
 <meta name="twitter:card" content="summary_large_image">
@@ -111,6 +111,15 @@ section[id]{scroll-margin-top:72px}
 @media(min-width:640px){.card-name{font-size:16px}}
 .card-cat{font-size:13px;color:var(--muted)}
 .state{grid-column:1/-1;padding:40px 0;text-align:center;color:var(--muted)}
+
+.filters.types .chip-f{font-size:15px;padding:7px 18px;border-width:2px}
+.sw{display:flex;gap:4px;margin-top:5px}
+.dot.sm{width:11px;height:11px;border-width:1px}
+.stage-note{margin:8px 0 0;font-size:13px;color:var(--muted);text-align:center}
+.alt-order{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px;font-size:14px;color:var(--muted)}
+.alt-btn{display:inline-block;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink);font-weight:600;font-size:14px;padding:7px 12px;text-decoration:none}
+.alt-btn:hover:not(:disabled){background:#e7e6df}
+.alt-btn:disabled{opacity:.45;cursor:not-allowed}
 
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
@@ -287,6 +296,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <div class="wrap">
       <h2 class="section-h" data-s="shop_title"></h2>
       <p class="section-sub" data-s="shop_text"></p>
+      <div class="filters types" id="typeFilters" role="group" aria-label="প্রোডাক্টের ধরন" hidden></div>
       <div class="filters" id="filters" role="group" aria-label="ক্যাটাগরি"></div>
       <div class="grid" id="grid" aria-live="polite">
         <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
@@ -357,6 +367,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
   <div class="sheet">
     <div class="sheet-media">
       <div class="stage" id="stage"></div>
+      <p class="stage-note" id="stageNote" hidden></p>
       <div class="thumbs" id="thumbs"></div>
     </div>
     <form class="sheet-form" id="orderForm" onsubmit="return false">
@@ -364,7 +375,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
       <h2 id="sheetName"></h2>
       <p class="sheet-price" id="sheetPrice"></p>
 
-      <fieldset id="gsmField"><legend>কাপড় (GSM)</legend><div class="opts" id="gsmOpts"></div></fieldset>
+      <fieldset id="gsmField"><legend>কাপড়</legend><div class="opts" id="gsmOpts"></div></fieldset>
       <fieldset><legend>কালার</legend><div class="opts" id="colorOpts"></div></fieldset>
       <fieldset><legend>সাইজ</legend><div class="opts" id="sizeOpts"></div></fieldset>
       <fieldset>
@@ -383,6 +394,11 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
         <div class="grand"><span>মোট</span><strong id="sumTotal"></strong></div>
       </div>
       <p class="return-note" data-s="return_text"></p>
+      <div class="alt-order">
+        <span>WhatsApp না থাকলে:</span>
+        <button type="button" class="alt-btn" id="msgBtn" disabled>Messenger-এ অর্ডার</button>
+        <a class="alt-btn" id="callBtn" href="#">কল করে অর্ডার</a>
+      </div>
       <div class="order-bar">
         <div class="bar-row">
           <div class="bar-total"><small>মোট</small><strong id="barTotal"></strong></div>
@@ -410,6 +426,7 @@ const CONFIG = {
   TAB_SETTINGS: "settings",
   TAB_FAQ: "faq",
   TAB_REVIEWS: "reviews",
+  TAB_VARIANTS: "variants",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -424,23 +441,23 @@ const CONFIG = {
     return_text: "প্রোডাক্টে সমস্যা থাকলে ডেলিভারি ম্যানের কাছেই ফেরত দিতে পারবেন।",
     announcement: "",
     page_size: "12",
-    hero_title: "গ্রাফিক টি-শার্ট, নিজের মতো করে।",
-    hero_text: "নানা স্টাইলের ডিজাইন, পছন্দের GSM, কালার ও সাইজে। সরাসরি WhatsApp-এ অর্ডার করুন।",
+    hero_title: "আপনার স্টাইলের পোশাক, এক জায়গায়।",
+    hero_text: "ট্রেন্ডি ডিজাইনের পোশাক, কাপড়ের আসল ভিডিওসহ। কালার ও সাইজ বেছে সহজে অর্ডার করুন।",
     hero_button: "কালেকশন দেখুন",
     perk1_title: "সমস্যা থাকলে ফেরত",
-    perk2_title: "GSM অনুযায়ী কাপড়",
-    perk2_text: "প্রতিটি GSM-এর আসল ভিডিও দেখে বেছে নিন",
+    perk2_title: "কাপড় দেখে কিনুন",
+    perk2_text: "প্রতিটি কাপড়ের আসল ভিডিও দেখে বেছে নিন",
     perk3_title: "সহজ অর্ডার",
-    perk3_text: "কালার, সাইজ বেছে WhatsApp-এ পাঠান",
+    perk3_text: "WhatsApp, Messenger বা কল, যেভাবে সুবিধা",
     perk4_title: "নির্দিষ্ট ডেলিভারি চার্জ",
     shop_title: "কালেকশন",
-    shop_text: "পছন্দের ডিজাইনে ট্যাপ করুন, GSM, কালার ও সাইজ বেছে নিন।",
+    shop_text: "পছন্দের প্রোডাক্টে ট্যাপ করুন, কাপড়, কালার ও সাইজ বেছে নিন।",
     steps_title: "অর্ডার করবেন যেভাবে",
     step1: "পছন্দের ডিজাইনে ট্যাপ করুন।",
-    step2: "GSM, কালার, সাইজ ও ডেলিভারি এলাকা বেছে নিন।",
-    step3: "“WhatsApp-এ অর্ডার করুন” চাপুন। মেসেজ তৈরি থাকবে, শুধু নাম, নম্বর ও ঠিকানা লিখে পাঠান।",
+    step2: "কাপড়, কালার, সাইজ ও ডেলিভারি এলাকা বেছে নিন।",
+    step3: "WhatsApp বা Messenger-এ অর্ডার পাঠান। মেসেজ তৈরি থাকবে, শুধু নাম, নম্বর ও ঠিকানা লিখে পাঠান।",
     fabric_title: "কাপড় নিজের চোখে দেখুন",
-    fabric_text: "GSM বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
+    fabric_text: "কাপড় বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
     reviews_title: "গ্রাহকদের কথা",
     faq_title: "সাধারণ প্রশ্ন",
     facebook: "https://www.facebook.com/profile.php?id=61575888545710"
@@ -458,7 +475,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  page: 1, faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  page: 1, type: "সব", variants: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -516,17 +533,22 @@ async function loadData() {
   } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
   try { const r = (await fetchRows(CONFIG.TAB_FAQ)).filter(x => x.question && x.answer); if (r.length) S.faq = r; } catch (e) {}
   try { S.reviews = (await fetchRows(CONFIG.TAB_REVIEWS)).filter(x => x.name && x.text); } catch (e) {}
+  try { S.variants = (await fetchRows(CONFIG.TAB_VARIANTS)).filter(x => x.id && x.color && (x.mockup || x.image)); } catch (e) {}
 }
 
 /* ---------- helpers: fabric, price, delivery ---------- */
-const gsmKey = f => String(f.gsm).replace(/[^\d.]/g, "") || String(f.gsm).trim();
-const gsmLabel = f => /gsm/i.test(f.gsm) ? String(f.gsm).trim() : `${String(f.gsm).trim()} GSM`;
+const norm = x => String(x ?? "").trim().toLowerCase().replace(/\s*gsm$/, "");
+const gsmKey = f => norm(f.gsm);
+const gsmLabel = f => { const g = String(f.gsm).trim(); return /^[\d.]+$/.test(g) ? `${g} GSM` : g; };
+const fabUid = f => `${String(f.type || "").trim().toLowerCase()}|${gsmKey(f)}`;
+const fabLabel = f => (f.type ? `${f.type} · ` : "") + gsmLabel(f);
 const isYes = v => /^(y|yes|true|1|হ্যাঁ|হ্যা)/i.test(String(v || "").trim());
 const isSold = d => /sold|out|শেষ/i.test(d.status || "");
 function fabricsFor(d) {
-  const want = list(d.gsm).map(x => x.replace(/[^\d.]/g, "") || x);
-  const f = want.length ? S.fabrics.filter(x => want.some(w => w === gsmKey(x))) : S.fabrics;
-  return f.length ? f : S.fabrics;
+  const typed = S.fabrics.filter(f => !f.type || !d.type || same(f.type, d.type));
+  const want = list(d.gsm).map(norm);
+  const f = want.length ? typed.filter(x => want.includes(gsmKey(x))) : typed;
+  return f.length ? f : typed;
 }
 function optionsFor(d, f, key) {
   const dl = list(d[key] || (key === "size" ? d.sizes : "")), fl = f ? list(f[key] || (key === "size" ? f.sizes : "")) : [];
@@ -538,6 +560,7 @@ const inStock = (d, f) => optionsFor(d, f, "colors").length > 0 && optionsFor(d,
 const priceOf = (d, f) => num(d.price, 0) + num(f && f.price_add, 0);
 function priceLabel(d) {
   const ps = fabricsFor(d).map(f => priceOf(d, f));
+  if (!ps.length) return money(num(d.price, 0));
   const min = Math.min(...ps);
   return Math.max(...ps) > min ? `${money(min)} থেকে` : money(min);
 }
@@ -549,7 +572,7 @@ function delivery(area, qty) {
 }
 function deliveryRule() {
   const s = S.settings;
-  return `গাজীপুরের ভেতরে ${num(s.delivery_in_upto, 4)}টি টি-শার্ট পর্যন্ত ${money(num(s.delivery_in, 50))}, গাজীপুরের বাইরে ${num(s.delivery_out_upto, 3)}টি পর্যন্ত ${money(num(s.delivery_out, 100))}। এরপর প্রতিটি বাড়তি টি-শার্টে +${money(num(s.delivery_extra, 10))}।`;
+  return `গাজীপুরের ভেতরে ${num(s.delivery_in_upto, 4)}টি পিস পর্যন্ত ${money(num(s.delivery_in, 50))}, গাজীপুরের বাইরে ${num(s.delivery_out_upto, 3)}টি পর্যন্ত ${money(num(s.delivery_out, 100))}। এরপর প্রতিটি বাড়তি পিসে +${money(num(s.delivery_extra, 10))}।`;
 }
 
 /* ---------- page ---------- */
@@ -564,6 +587,8 @@ function renderStatic() {
     const v = String(s[el.dataset.s] || fall[el.dataset.s] || "").trim();
     el.textContent = v; el.hidden = !v;
   });
+  $("msgBtn").hidden = !messengerBase();
+  $("callBtn").href = `tel:+${digits(s.phone || s.whatsapp)}`;
   const wa = waLink("হ্যালো TWISTURE, আমি একটা বিষয়ে জানতে চাই।");
   $("hdrWa").href = wa; $("waFab").href = wa;
   if (s.size_chart_image) { const a = $("sizeChartLink"); a.href = s.size_chart_image; a.hidden = false; }
@@ -582,7 +607,8 @@ function renderFaq() {
     {question: "ডেলিভারি চার্জ কত?", answer: deliveryRule()},
     {question: "কোন GSM নেব?", answer: "GSM যত বেশি, কাপড় তত ঘন ও ভারী হয়। প্রতিটি GSM-এর আসল ভিডিও দেখে নিজের পছন্দমতো বেছে নিন।"},
     {question: "পেমেন্ট কীভাবে করব?", answer: s.payment_note},
-    {question: "অর্ডার কনফার্ম হবে কীভাবে?", answer: "WhatsApp-এ আপনার মেসেজ পেলে আমরা সেখানেই কনফার্ম করে জানাব।"}
+    {question: "WhatsApp না থাকলে কীভাবে অর্ডার করব?", answer: "Messenger-এ অথবা কল করে অর্ডার করতে পারবেন। অর্ডারের পর্দায় এই দুটো বোতাম আছে।"},
+    {question: "অর্ডার কনফার্ম হবে কীভাবে?", answer: "আপনার মেসেজ (WhatsApp বা Messenger) পেলে আমরা সেখানেই কনফার্ম করে জানাব।"}
   ];
   $("faqList").innerHTML = items.map(i => `<details><summary>${esc(i.question)}</summary><p>${esc(i.answer)}</p></details>`).join("");
 }
@@ -603,13 +629,18 @@ function renderHero() {
   const src = d.mockup || d.image, contain = !d.mockup;
   b.hidden = false; b.dataset.id = d.id || d.name;
   b.setAttribute("aria-label", `${d.name} দেখুন`);
-  b.innerHTML = `<img src="${esc(opt(src, 900))}" class="${contain ? "contain" : ""}" alt="${esc(d.name)} টি-শার্ট"><span class="cap"><b>${esc(d.name)}</b><span>${priceLabel(d)}</span></span>`;
+  b.innerHTML = `<img src="${esc(opt(src, 900))}" class="${contain ? "contain" : ""}" alt="${esc(d.name)}"><span class="cap"><b>${esc(d.name)}</b><span>${priceLabel(d)}</span></span>`;
 }
 
 function renderFilters() {
-  const cats = ["সব", ...new Set(S.designs.map(d => d.category).filter(Boolean))];
+  const chip = (t, on, attr) => `<button type="button" class="chip-f" aria-pressed="${on}" data-${attr}="${esc(t)}">${esc(t)}</button>`;
+  const types = [...new Set(S.designs.map(d => d.type).filter(Boolean))];
+  $("typeFilters").hidden = types.length < 2;
+  $("typeFilters").innerHTML = ["সব", ...types].map(t => chip(t, t === S.type, "t")).join("");
+  const pool = S.designs.filter(d => S.type === "সব" || d.type === S.type);
+  const cats = ["সব", ...new Set(pool.map(d => d.category).filter(Boolean))];
   $("filters").hidden = cats.length < 3;
-  $("filters").innerHTML = cats.map(c => `<button type="button" class="chip-f" aria-pressed="${c === S.filter}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
+  $("filters").innerHTML = cats.map(c => chip(c, c === S.filter, "c")).join("");
 }
 
 function pageList(cur, total) {
@@ -620,7 +651,7 @@ function pageList(cur, total) {
 }
 
 function renderGrid() {
-  const all = S.designs.filter(d => S.filter === "সব" || d.category === S.filter);
+  const all = S.designs.filter(d => (S.type === "সব" || d.type === S.type) && (S.filter === "সব" || d.category === S.filter));
   if (!all.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; $("pager").hidden = true; return; }
   const size = Math.max(2, Math.round(num(S.settings.page_size, 12)));
   const pages = Math.ceil(all.length / size);
@@ -630,12 +661,12 @@ function renderGrid() {
     const src = d.mockup || d.image, contain = !d.mockup;
     return `<button type="button" class="card" data-id="${esc(d.id || d.name)}">
       <span class="card-img">
-        <img loading="lazy" class="${contain ? "contain" : ""}" src="${esc(opt(src, 600))}" alt="${esc(d.name)} টি-শার্ট">
+        <img loading="lazy" class="${contain ? "contain" : ""}" src="${esc(opt(src, 600))}" alt="${esc(d.name)}">
         ${d.badge ? `<span class="badge">${esc(d.badge)}</span>` : ""}
         <span class="price-tag">${priceLabel(d)}</span>
         ${isSold(d) ? `<span class="soldout-flag">স্টক শেষ</span>` : ""}
       </span>
-      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-cat">${esc(d.category)}</span></span>
+      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-cat">${esc([d.type, d.category].filter(Boolean).join(" · "))}</span>${list(d.colors).length > 1 ? `<span class="sw" aria-label="কালার: ${esc(list(d.colors).join(", "))}">${list(d.colors).slice(0, 6).map(c => `<i class="dot sm" style="background:${COLORS[c.toLowerCase()] || "#bbb"}"></i>`).join("")}</span>` : ""}</span>
     </button>`;
   }).join("");
   const pg = $("pager");
@@ -649,16 +680,16 @@ function renderGrid() {
 /* ---------- fabric section ---------- */
 function renderFabric() {
   const fabs = S.fabrics;
-  if (!S.fabView || !fabs.some(f => gsmKey(f) === S.fabView)) S.fabView = gsmKey(fabs[0]);
-  $("gsmTabs").innerHTML = fabs.map(f => `<button type="button" class="chip-f" data-g="${esc(gsmKey(f))}" aria-pressed="${gsmKey(f) === S.fabView}">${esc(gsmLabel(f))}</button>`).join("");
+  if (!S.fabView || !fabs.some(f => fabUid(f) === S.fabView)) S.fabView = fabUid(fabs[0]);
+  $("gsmTabs").innerHTML = fabs.map(f => `<button type="button" class="chip-f" data-g="${esc(fabUid(f))}" aria-pressed="${fabUid(f) === S.fabView}">${esc(fabLabel(f))}</button>`).join("");
   $("gsmTabs").hidden = fabs.length < 2;
-  const f = fabs.find(x => gsmKey(x) === S.fabView), vid = ytId(f.video);
+  const f = fabs.find(x => fabUid(x) === S.fabView), vid = ytId(f.video);
   $("videoBox").innerHTML = vid
     ? `<iframe src="https://www.youtube-nocookie.com/embed/${vid}?rel=0" title="${esc(gsmLabel(f))} কাপড়ের ভিডিও" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
     : `<div class="none">এই কাপড়ের ভিডিও শীঘ্রই আসছে।</div>`;
   const photos = list(f.photos).length ? list(f.photos) : (fabs.length === 1 ? list(S.settings.fabric_images) : []);
   $("fabricPhotos").innerHTML = photos.map(u => `<img loading="lazy" src="${esc(opt(u, 500))}" alt="${esc(gsmLabel(f))} কাপড়ের ক্লোজ-আপ">`).join("");
-  const rows = [["কাপড়", gsmLabel(f)]];
+  const rows = [["কাপড়", fabLabel(f)]];
   if (f.note) rows.push(["বিবরণ", f.note]);
   if (num(f.price_add, 0) > 0) rows.push(["দাম", `ডিজাইনের দামের সাথে +${money(num(f.price_add, 0))}`]);
   rows.push(["ডেলিভারি সময়", S.settings.delivery_time]);
@@ -668,6 +699,7 @@ function renderFabric() {
 /* ---------- order sheet ---------- */
 const COLORS = {black:"#111",white:"#fff",red:"#c62828",blue:"#1e40af",navy:"#1b2a4a",green:"#2e7d32",grey:"#8a8a8a",gray:"#8a8a8a",maroon:"#6d1b2b",beige:"#d8c8a8",cream:"#efe6cf",yellow:"#e6c229",brown:"#5b3a29",olive:"#5a5f2b",pink:"#e79ab5",purple:"#5e3a8c",orange:"#e07b2a"};
 const curFab = () => S.fabs.find(f => gsmKey(f) === S.gsm);
+const variantFor = (d, color) => color ? S.variants.find(v => String(v.id) === String(d.id || d.name) && same(v.color, color)) : null;
 
 function radios(name, items) {
   return items.map(it => `<label class="opt"><input type="radio" name="${name}" value="${esc(it.v)}"${it.on ? " checked" : ""}${it.off ? " disabled" : ""}><span>${it.dot ? `<i class="dot" style="background:${COLORS[it.v.toLowerCase()] || "#bbb"}"></i>` : ""}${esc(it.t ?? it.v)}${it.sub ? ` <small>${esc(it.sub)}</small>` : ""}</span></label>`).join("");
@@ -692,9 +724,10 @@ function paintStage() {
 
 function renderMedia() {
   const d = S.current, f = curFab(), items = [];
+  const v = variantFor(d, S.color), mockup = (v && v.mockup) || d.mockup, image = (v && v.image) || d.image;
   /* ক্রম: পরলে কেমন দেখায় -> ডিজাইন -> কাপড়ের ভিডিও */
-  if (d.mockup) items.push({k: "mockup", label: "পরলে কেমন দেখায়", src: d.mockup, thumb: d.mockup});
-  if (d.image) items.push({k: "image", label: "ডিজাইন", src: d.image, thumb: d.image, fit: true});
+  if (mockup) items.push({k: "mockup", label: "পরলে কেমন দেখায়", src: mockup, thumb: mockup});
+  if (image) items.push({k: "image", label: "ডিজাইন", src: image, thumb: image, fit: true});
   const vid = f && ytId(f.video);
   if (vid) items.push({k: "video", label: `${gsmLabel(f)} ভিডিও`, vid, thumb: `https://i.ytimg.com/vi/${vid}/mqdefault.jpg`});
   if (!items.length) items.push({k: "none", label: ""});
@@ -706,16 +739,20 @@ function renderMedia() {
     S.stageKey = key;
     $("stage").innerHTML = it.k === "video"
       ? `<iframe src="https://www.youtube-nocookie.com/embed/${it.vid}?rel=0" title="${esc(it.label)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
-      : it.src ? `<img class="${it.fit ? "fit" : ""}" src="${esc(opt(it.src, 900))}" alt="${esc(d.name)} টি-শার্ট">` : "";
+      : it.src ? `<img class="${it.fit ? "fit" : ""}" src="${esc(opt(it.src, 900))}" alt="${esc(d.name)}">` : "";
   }
   paintStage();
+  const firstColor = list(d.colors)[0];
+  const note = S.media === "mockup" && S.color && firstColor && !same(S.color, firstColor) && !(v && v.mockup);
+  $("stageNote").hidden = !note;
+  if (note) $("stageNote").textContent = `ছবিতে ${firstColor} কালার দেখানো হয়েছে`;
 }
 
 function openSheet(d) {
   S.current = d; S.qty = 1; S.color = ""; S.size = ""; S.area = ""; S.media = ""; S.stageKey = "";
   S.fabs = fabricsFor(d);
   const first = S.fabs.find(f => inStock(d, f)) || S.fabs[0];
-  S.gsm = gsmKey(first);
+  S.gsm = first ? gsmKey(first) : "";
   $("sheetName").textContent = d.name;
   $("gsmOpts").innerHTML = radios("gsm", S.fabs.map(f => ({
     v: gsmKey(f), t: gsmLabel(f), sub: num(f.price_add, 0) > 0 ? `+${money(num(f.price_add, 0))}` : (inStock(d, f) ? "" : "স্টক নেই"),
@@ -741,7 +778,7 @@ function updateOrder() {
   $("sumTotal").textContent = money(items + del);
   $("barTotal").textContent = money(items + del);
 
-  const btn = $("orderBtn"), off = t => { btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href"); $("hint").textContent = t; };
+  const btn = $("orderBtn"), off = t => { btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href"); $("msgBtn").disabled = true; S.msg = ""; $("hint").textContent = t; };
   if (isSold(d)) return off("এই ডিজাইনের স্টক এখন শেষ।");
   if (!S.color) return off("আগে কালার বেছে নিন");
   if (!S.size) return off("এবার সাইজ বেছে নিন");
@@ -761,11 +798,13 @@ function updateOrder() {
   ].join("\n");
   btn.href = waLink(msg);
   btn.setAttribute("aria-disabled", "false");
+  S.msg = msg; $("msgBtn").disabled = false;
   $("hint").textContent = "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
 }
 
 /* ---------- events ---------- */
 const openById = id => { const d = S.designs.find(x => String(x.id || x.name) === id); if (d) openSheet(d); };
+$("typeFilters").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (!b) return; S.type = b.dataset.t; S.filter = "সব"; S.page = 1; renderFilters(); renderGrid(); });
 $("filters").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (!b) return; S.filter = b.dataset.c; S.page = 1; renderFilters(); renderGrid(); });
 $("grid").addEventListener("click", e => { const b = e.target.closest(".card"); if (b) openById(b.dataset.id); });
 $("pager").addEventListener("click", e => {
@@ -779,10 +818,27 @@ $("thumbs").addEventListener("click", e => { const b = e.target.closest(".thumb"
 $("orderForm").addEventListener("change", e => {
   const n = e.target.name, v = e.target.value;
   if (n === "gsm") { S.gsm = v; renderOptions(); renderMedia(); }
-  if (n === "color") { S.color = v; paintStage(); }
+  if (n === "color") { S.color = v; renderMedia(); }
   if (n === "size") S.size = v;
   if (n === "area") S.area = v;
   updateOrder();
+});
+function messengerBase() {
+  const s = S.settings;
+  if (s.messenger) return s.messenger.trim().replace(/\/+$/, "");
+  const fb = s.facebook || "";
+  const id = (fb.match(/[?&]id=(\d+)/) || [])[1];
+  if (id) return `https://m.me/${id}`;
+  const u = (fb.match(/facebook\.com\/([^/?#]+)/) || [])[1];
+  return u && u !== "profile.php" ? `https://m.me/${u}` : "";
+}
+$("msgBtn").addEventListener("click", () => {
+  if (!S.msg) return;
+  const base = messengerBase(); if (!base) return;
+  window.open(`${base}${base.includes("?") ? "&" : "?"}text=${encodeURIComponent(S.msg)}`, "_blank", "noopener");
+  const done = () => { $("hint").textContent = "অর্ডারের মেসেজ কপি হয়েছে। Messenger-এর মেসেজ বক্স ফাঁকা থাকলে Paste করে পাঠান।"; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(S.msg).then(done, () => {});
+  else { const t = document.createElement("textarea"); t.value = S.msg; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); }
 });
 $("qMinus").onclick = () => { S.qty = Math.max(1, S.qty - 1); updateOrder(); };
 $("qPlus").onclick = () => { S.qty = Math.min(20, S.qty + 1); updateOrder(); };
