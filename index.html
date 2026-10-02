@@ -94,20 +94,31 @@ section[id]{scroll-margin-top:72px}
 .filters::-webkit-scrollbar{display:none}
 .chip-f{flex:none;border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:6px 16px;font-weight:600;font-size:14px}
 .chip-f[aria-pressed="true"]{background:var(--tee);color:var(--paper)}
-.grid{display:grid;grid-template-columns:1fr;gap:14px}
-@media(min-width:480px){.grid{grid-template-columns:repeat(2,1fr);gap:14px}}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.grid{gap:16px}}
 @media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr);gap:20px}}
 .card{display:flex;flex-direction:column;text-align:left;padding:0;background:var(--paper);border:1.5px solid var(--line);border-radius:6px;overflow:hidden}
 .card:hover .card-img img{transform:scale(1.03)}
 .card-img{position:relative;aspect-ratio:4/3;background:var(--tee);overflow:hidden}
 .card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
 .card-img img.contain{object-fit:contain;padding:12px}
-.price-tag{position:absolute;left:0;bottom:10px;background:var(--tee);color:var(--paper);font-family:var(--display);font-weight:700;font-size:15px;padding:3px 12px 3px 10px;border-radius:0 4px 4px 0}
+.price-tag{position:absolute;left:0;bottom:8px;background:var(--tee);color:var(--paper);font-family:var(--display);font-weight:700;font-size:13px;padding:2px 10px 2px 8px;border-radius:0 4px 4px 0}
+@media(min-width:640px){.price-tag{font-size:15px;padding:3px 12px 3px 10px;bottom:10px}}
 .soldout-flag{position:absolute;inset:0;display:grid;place-items:center;background:rgba(17,17,18,.62);color:var(--paper);font-weight:700}
-.card-body{padding:10px 12px 12px}
-.card-name{font-family:var(--display);font-weight:700;font-size:16px;line-height:1.25;margin:0}
+.card-body{padding:8px 10px 10px}
+@media(min-width:640px){.card-body{padding:10px 12px 12px}}
+.card-name{font-family:var(--display);font-weight:700;font-size:15px;line-height:1.25;margin:0}
+@media(min-width:640px){.card-name{font-size:16px}}
 .card-cat{font-size:13px;color:var(--muted)}
 .state{grid-column:1/-1;padding:40px 0;text-align:center;color:var(--muted)}
+
+/* pager */
+.pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
+.pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
+.pg:hover:not(:disabled){background:#e7e6df}
+.pg[aria-current="page"]{background:var(--tee);color:var(--paper)}
+.pg:disabled{opacity:.4;cursor:not-allowed}
+.pg-gap{display:grid;place-items:center;min-width:22px;color:var(--muted)}
 
 /* how */
 .how{padding:36px 0 56px}
@@ -134,7 +145,7 @@ section[id]{scroll-margin-top:72px}
 .link-plain{display:inline-block;margin-top:14px;font-weight:600}
 
 /* badge, skeleton */
-.badge{position:absolute;left:10px;top:10px;background:var(--cobalt);color:#fff;font-weight:700;font-size:13px;padding:2px 10px;border-radius:4px}
+.badge{position:absolute;left:8px;top:8px;background:var(--cobalt);color:#fff;font-weight:700;font-size:12px;padding:1px 8px;border-radius:4px}
 .skel{aspect-ratio:4/3;border:1.5px solid var(--line);border-radius:6px;background:linear-gradient(90deg,#cfcec7,#e3e2dc,#cfcec7);background-size:200% 100%;animation:sk 1.2s linear infinite}
 @keyframes sk{to{background-position:-200% 0}}
 @media(prefers-reduced-motion:reduce){.skel{animation:none}}
@@ -152,7 +163,9 @@ section[id]{scroll-margin-top:72px}
 .rev figcaption b{color:var(--ink)}
 
 /* floating whatsapp */
-.wa-fab{position:fixed;right:14px;bottom:14px;z-index:15;display:inline-flex;align-items:center;gap:8px;background:var(--wa);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:11px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.wa-fab{position:fixed;right:12px;bottom:12px;z-index:15;display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--wa);color:#fff;text-decoration:none;font-weight:700;font-size:15px;width:50px;height:50px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.wa-fab span{display:none}
+@media(min-width:640px){.wa-fab{width:auto;height:auto;padding:11px 16px;right:14px;bottom:14px}.wa-fab span{display:inline}}
 .wa-fab svg{width:20px;height:20px;fill:#fff;flex:none}
 
 /* faq */
@@ -276,8 +289,9 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
       <p class="section-sub" data-s="shop_text"></p>
       <div class="filters" id="filters" role="group" aria-label="ক্যাটাগরি"></div>
       <div class="grid" id="grid" aria-live="polite">
-        <div class="skel"></div><div class="skel"></div><div class="skel"></div>
+        <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
       </div>
+      <nav class="pager" id="pager" aria-label="পেজ" hidden></nav>
     </div>
   </section>
 
@@ -409,6 +423,7 @@ const CONFIG = {
     payment_note: "অর্ডার কনফার্ম করার সময় WhatsApp-এ পেমেন্টের নিয়ম জানানো হবে।",
     return_text: "প্রোডাক্টে সমস্যা থাকলে ডেলিভারি ম্যানের কাছেই ফেরত দিতে পারবেন।",
     announcement: "",
+    page_size: "12",
     hero_title: "গ্রাফিক টি-শার্ট, নিজের মতো করে।",
     hero_text: "নানা স্টাইলের ডিজাইন, পছন্দের GSM, কালার ও সাইজে। সরাসরি WhatsApp-এ অর্ডার করুন।",
     hero_button: "কালেকশন দেখুন",
@@ -443,7 +458,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  page: 1, faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -597,9 +612,20 @@ function renderFilters() {
   $("filters").innerHTML = cats.map(c => `<button type="button" class="chip-f" aria-pressed="${c === S.filter}" data-c="${esc(c)}">${esc(c)}</button>`).join("");
 }
 
+function pageList(cur, total) {
+  const keep = [...new Set([1, total, cur - 1, cur, cur + 1])].filter(n => n >= 1 && n <= total).sort((x, y) => x - y);
+  const out = [];
+  keep.forEach((n, i) => { if (i && n - keep[i - 1] > 1) out.push("…"); out.push(n); });
+  return out;
+}
+
 function renderGrid() {
-  const items = S.designs.filter(d => S.filter === "সব" || d.category === S.filter);
-  if (!items.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; return; }
+  const all = S.designs.filter(d => S.filter === "সব" || d.category === S.filter);
+  if (!all.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; $("pager").hidden = true; return; }
+  const size = Math.max(2, Math.round(num(S.settings.page_size, 12)));
+  const pages = Math.ceil(all.length / size);
+  S.page = Math.min(Math.max(1, S.page), pages);
+  const items = all.slice((S.page - 1) * size, S.page * size);
   $("grid").innerHTML = items.map(d => {
     const src = d.mockup || d.image, contain = !d.mockup;
     return `<button type="button" class="card" data-id="${esc(d.id || d.name)}">
@@ -612,6 +638,12 @@ function renderGrid() {
       <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-cat">${esc(d.category)}</span></span>
     </button>`;
   }).join("");
+  const pg = $("pager");
+  pg.hidden = pages < 2;
+  if (pages < 2) return;
+  pg.innerHTML = `<button type="button" class="pg" data-p="${S.page - 1}" aria-label="আগের পেজ"${S.page === 1 ? " disabled" : ""}>‹</button>`
+    + pageList(S.page, pages).map(n => n === "…" ? `<span class="pg-gap" aria-hidden="true">…</span>` : `<button type="button" class="pg" data-p="${n}"${n === S.page ? ' aria-current="page"' : ""} aria-label="পেজ ${n}">${n}</button>`).join("")
+    + `<button type="button" class="pg" data-p="${S.page + 1}" aria-label="পরের পেজ"${S.page === pages ? " disabled" : ""}>›</button>`;
 }
 
 /* ---------- fabric section ---------- */
@@ -734,8 +766,13 @@ function updateOrder() {
 
 /* ---------- events ---------- */
 const openById = id => { const d = S.designs.find(x => String(x.id || x.name) === id); if (d) openSheet(d); };
-$("filters").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (!b) return; S.filter = b.dataset.c; renderFilters(); renderGrid(); });
+$("filters").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (!b) return; S.filter = b.dataset.c; S.page = 1; renderFilters(); renderGrid(); });
 $("grid").addEventListener("click", e => { const b = e.target.closest(".card"); if (b) openById(b.dataset.id); });
+$("pager").addEventListener("click", e => {
+  const b = e.target.closest("button[data-p]"); if (!b || b.disabled) return;
+  S.page = Number(b.dataset.p); renderGrid();
+  $("shop").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+});
 $("heroCard").addEventListener("click", e => openById(e.currentTarget.dataset.id));
 $("gsmTabs").addEventListener("click", e => { const b = e.target.closest("button[data-g]"); if (!b) return; S.fabView = b.dataset.g; renderFabric(); });
 $("thumbs").addEventListener("click", e => { const b = e.target.closest(".thumb"); if (!b) return; S.media = b.dataset.k; renderMedia(); });
