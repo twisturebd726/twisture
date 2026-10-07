@@ -121,6 +121,29 @@ section[id]{scroll-margin-top:72px}
 .alt-btn:hover:not(:disabled){background:#e7e6df}
 .alt-btn:disabled{opacity:.45;cursor:not-allowed}
 
+.order-btn.form{background:var(--tee);border:0;font-family:inherit;cursor:pointer}
+.order-btn.form:hover:not(:disabled){filter:brightness(1.25)}
+.order-btn:disabled{background:#8f8f8f;cursor:not-allowed}
+.alt-btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
+#orderDlg{max-width:100%}
+@media(min-width:860px){#orderDlg{max-width:520px}}
+.od{position:relative;padding:22px 18px 24px}
+.od h2{font-family:var(--display);font-weight:800;font-size:24px;margin:0 40px 12px 0;line-height:1.2}
+.od-sum{background:#e7e6df;border-radius:8px;padding:10px 12px;margin-bottom:16px;font-size:15px;line-height:1.55}
+.od-sum b{font-family:var(--display)}
+.fld{display:block;font-weight:700;margin-bottom:14px}
+.fld input,.fld textarea{display:block;width:100%;margin-top:6px;padding:11px 12px;border:1.5px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:inherit;font-weight:400;font-size:16px}
+.fld textarea{resize:vertical}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.od-err{min-height:1.4em;margin:0 0 8px;color:#b3261e;font-weight:600;font-size:14px}
+.od-submit{width:100%;flex:none}
+.od-priv{margin:10px 0 0;font-size:13px;color:var(--muted);text-align:center}
+.od-id{font-size:18px;margin:0 0 8px}
+.od-id b{font-family:var(--display);letter-spacing:.04em}
+.od-meta{color:var(--muted);font-size:14px}
+.od-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.od-actions .order-btn{flex:1;min-width:140px}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -395,18 +418,50 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
       </div>
       <p class="return-note" data-s="return_text"></p>
       <div class="alt-order">
-        <span>WhatsApp না থাকলে:</span>
+        <span id="altLead">WhatsApp না থাকলে:</span>
+        <a class="alt-btn" id="waAlt" href="#" target="_blank" rel="noopener" aria-disabled="true" hidden>WhatsApp</a>
         <button type="button" class="alt-btn" id="msgBtn" disabled>Messenger-এ অর্ডার</button>
         <a class="alt-btn" id="callBtn" href="#">কল করে অর্ডার</a>
       </div>
       <div class="order-bar">
         <div class="bar-row">
           <div class="bar-total"><small>মোট</small><strong id="barTotal"></strong></div>
+          <button type="button" class="order-btn form" id="formBtn" disabled hidden>অর্ডার করুন</button>
           <a class="order-btn" id="orderBtn" href="#" target="_blank" rel="noopener" aria-disabled="true">WhatsApp-এ অর্ডার করুন</a>
         </div>
         <p class="hint" id="hint" role="status"></p>
       </div>
     </form>
+  </div>
+</dialog>
+
+<dialog id="orderDlg" aria-labelledby="odTitle">
+  <div class="od">
+    <button type="button" class="close" id="odClose" aria-label="বন্ধ করুন">×</button>
+    <div id="odForm">
+      <h2 id="odTitle">ডেলিভারির তথ্য দিন</h2>
+      <div class="od-sum" id="odSum"></div>
+      <form id="odFormEl" novalidate>
+        <label class="fld">নাম<input name="name" autocomplete="name" maxlength="80" required></label>
+        <label class="fld">ফোন নম্বর<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" maxlength="20" required></label>
+        <label class="fld">সম্পূর্ণ ঠিকানা<textarea name="address" rows="3" autocomplete="street-address" maxlength="300" placeholder="বাসা/রাস্তা, এলাকা, থানা, জেলা" required></textarea></label>
+        <label class="fld">নোট (ঐচ্ছিক)<input name="note" maxlength="200" placeholder="কিছু জানাতে চাইলে লিখুন"></label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="od-err" id="odErr" role="alert"></p>
+        <button type="submit" class="order-btn form od-submit" id="odSubmit">অর্ডার নিশ্চিত করুন</button>
+        <p class="od-priv">আপনার নাম, নম্বর ও ঠিকানা শুধু অর্ডার ডেলিভারির জন্য ব্যবহার হবে।</p>
+      </form>
+    </div>
+    <div id="odDone" hidden>
+      <h2>অর্ডার পাওয়া গেছে ✓</h2>
+      <p class="od-id">অর্ডার নম্বর: <b id="odId"></b></p>
+      <p id="odDoneText"></p>
+      <p id="odDoneMeta" class="od-meta"></p>
+      <div class="od-actions">
+        <a class="alt-btn" id="odWa" href="#" target="_blank" rel="noopener">WhatsApp-এ জানান</a>
+        <button type="button" class="order-btn form" id="odOk">ঠিক আছে</button>
+      </div>
+    </div>
   </div>
 </dialog>
 
@@ -439,6 +494,8 @@ const CONFIG = {
     size_chart_image: "",
     payment_note: "অর্ডার কনফার্ম করার সময় WhatsApp-এ পেমেন্টের নিয়ম জানানো হবে।",
     return_text: "প্রোডাক্টে সমস্যা থাকলে ডেলিভারি ম্যানের কাছেই ফেরত দিতে পারবেন।",
+    order_endpoint: "",   /* Apps Script Web app URL (অর্ডার ফর্মের জন্য) */
+    order_done_text: "আমরা শীঘ্রই আপনার নম্বরে যোগাযোগ করে অর্ডার কনফার্ম করব।",
     announcement: "",
     page_size: "12",
     hero_title: "আপনার স্টাইলের পোশাক, এক জায়গায়।",
@@ -475,7 +532,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  page: 1, type: "সব", variants: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -576,6 +633,8 @@ function deliveryRule() {
 }
 
 /* ---------- page ---------- */
+const hasForm = () => /^https:\/\/script\.google(usercontent)?\.com\//.test(String(S.settings.order_endpoint || "").trim());
+
 function renderStatic() {
   const s = S.settings;
   const fall = {
@@ -587,6 +646,9 @@ function renderStatic() {
     const v = String(s[el.dataset.s] || fall[el.dataset.s] || "").trim();
     el.textContent = v; el.hidden = !v;
   });
+  const form = hasForm();
+  $("formBtn").hidden = !form; $("orderBtn").hidden = form; $("waAlt").hidden = !form;
+  $("altLead").textContent = form ? "চ্যাটে অর্ডার করতে চাইলে:" : "WhatsApp না থাকলে:";
   $("msgBtn").hidden = !messengerBase();
   $("callBtn").href = `tel:+${digits(s.phone || s.whatsapp)}`;
   const wa = waLink("হ্যালো TWISTURE, আমি একটা বিষয়ে জানতে চাই।");
@@ -778,7 +840,8 @@ function updateOrder() {
   $("sumTotal").textContent = money(items + del);
   $("barTotal").textContent = money(items + del);
 
-  const btn = $("orderBtn"), off = t => { btn.setAttribute("aria-disabled", "true"); btn.removeAttribute("href"); $("msgBtn").disabled = true; S.msg = ""; $("hint").textContent = t; };
+  const btn = $("orderBtn"), wa2 = $("waAlt");
+  const off = t => { [btn, wa2].forEach(b => { b.setAttribute("aria-disabled", "true"); b.removeAttribute("href"); }); $("msgBtn").disabled = true; $("formBtn").disabled = true; S.ready = false; S.msg = ""; $("hint").textContent = t; };
   if (isSold(d)) return off("এই ডিজাইনের স্টক এখন শেষ।");
   if (!S.color) return off("আগে কালার বেছে নিন");
   if (!S.size) return off("এবার সাইজ বেছে নিন");
@@ -796,10 +859,10 @@ function updateOrder() {
     `মোট: ${money(items + del)}`, "",
     "নাম:", "ফোন নম্বর:", "সম্পূর্ণ ঠিকানা:"
   ].join("\n");
-  btn.href = waLink(msg);
-  btn.setAttribute("aria-disabled", "false");
-  S.msg = msg; $("msgBtn").disabled = false;
-  $("hint").textContent = "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
+  [btn, wa2].forEach(b => { b.href = waLink(msg); b.setAttribute("aria-disabled", "false"); });
+  S.msg = msg; $("msgBtn").disabled = false; $("formBtn").disabled = false; S.ready = true;
+  S.orderData = {design_id: String(d.id || d.name), design: d.name, type: d.type || "", fabric: f ? gsmLabel(f) : "", color: S.color, size: S.size, qty: S.qty, unit_price: unit, items_total: items, delivery_area: areaName, delivery_charge: del, total: items + del};
+  $("hint").textContent = hasForm() ? "নিচের বোতামে ট্যাপ করে ডেলিভারির তথ্য দিন।" : "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
 }
 
 /* ---------- events ---------- */
@@ -823,6 +886,58 @@ $("orderForm").addEventListener("change", e => {
   if (n === "area") S.area = v;
   updateOrder();
 });
+/* ---------- সরাসরি অর্ডার ফর্ম ---------- */
+const bn2en = v => String(v || "").replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
+const normPhone = v => bn2en(v).replace(/[\s\-().]/g, "").replace(/^\+?88/, "");
+const okPhone = p => /^01[3-9]\d{8}$/.test(p);
+function newOrderId() {
+  const c = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; let id = "";
+  crypto.getRandomValues(new Uint8Array(6)).forEach(n => id += c[n % c.length]);
+  return "TW-" + id;
+}
+function openOrderDialog() {
+  if (!S.ready || !S.orderData) return;
+  const o = S.orderData;
+  $("odSum").innerHTML = `<b>${esc(o.design)}</b>${o.fabric ? ` · ${esc(o.fabric)}` : ""}<br>${esc(o.color)} · সাইজ ${esc(o.size)} · ${o.qty}টি<br>মূল্য ${money(o.items_total)} + ডেলিভারি ${money(o.delivery_charge)} = <b>${money(o.total)}</b>`;
+  $("odErr").textContent = ""; $("odForm").hidden = false; $("odDone").hidden = true;
+  $("odSubmit").disabled = false; $("odSubmit").textContent = "অর্ডার নিশ্চিত করুন";
+  $("orderDlg").showModal();
+}
+function odError(msg, field) { $("odErr").textContent = msg; if (field) field.focus(); }
+$("formBtn").addEventListener("click", openOrderDialog);
+$("odFormEl").addEventListener("input", () => { $("odErr").textContent = ""; });
+$("odClose").onclick = () => $("orderDlg").close();
+$("odOk").onclick = () => { $("orderDlg").close(); $("sheet").close(); };
+$("orderDlg").addEventListener("click", e => { if (e.target === $("orderDlg")) $("orderDlg").close(); });
+$("odFormEl").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, fd = new FormData(f);
+  const name = String(fd.get("name") || "").trim(), phone = normPhone(fd.get("phone")), address = String(fd.get("address") || "").trim(), note = String(fd.get("note") || "").trim();
+  if (name.length < 2) return odError("আপনার নাম লিখুন।", f.elements.name);
+  if (!okPhone(phone)) return odError("সঠিক মোবাইল নম্বর দিন (যেমন 01712345678)।", f.elements.phone);
+  if (address.length < 10) return odError("সম্পূর্ণ ঠিকানা লিখুন (এলাকা, থানা, জেলাসহ)।", f.elements.address);
+  if (!S.pendingId) S.pendingId = newOrderId();
+  const id = S.pendingId;
+  if (fd.get("website")) { showDone(id, phone); return; }   /* spam trap */
+  odError("");
+  $("odSubmit").disabled = true; $("odSubmit").textContent = "পাঠানো হচ্ছে…";
+  const payload = {...S.orderData, order_id: id, name, phone, address, note, page: location.href.split("#")[0], hp: ""};
+  try {
+    await fetch(S.settings.order_endpoint.trim(), {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload)});
+    showDone(id, phone);
+  } catch (err) {
+    $("odSubmit").disabled = false; $("odSubmit").textContent = "অর্ডার নিশ্চিত করুন";
+    odError("পাঠানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন, অথবা WhatsApp-এ অর্ডার করুন।");
+  }
+});
+function showDone(id, phone) {
+  S.pendingId = ""; $("odForm").hidden = true; $("odDone").hidden = false;
+  $("odId").textContent = id;
+  $("odDoneText").textContent = S.settings.order_done_text;
+  $("odDoneMeta").textContent = `ডেলিভারি সময় ${S.settings.delivery_time}। ${S.settings.return_text}`;
+  $("odWa").href = waLink(`হ্যালো TWISTURE, আমার অর্ডার নম্বর ${id}। অর্ডারটি নিয়ে জানতে চাই।`);
+}
+
 function messengerBase() {
   const s = S.settings;
   if (s.messenger) return s.messenger.trim().replace(/\/+$/, "");
