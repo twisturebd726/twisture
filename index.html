@@ -144,6 +144,14 @@ section[id]{scroll-margin-top:72px}
 .od-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
 .od-actions .order-btn{flex:1;min-width:140px}
 
+.card-price{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;margin-top:2px}
+.card-price b{font-family:var(--display);font-size:16px}
+.card-price s{color:var(--muted);font-size:13px}
+.off{font-style:normal;background:var(--cobalt);color:#fff;font-weight:700;font-size:12px;padding:1px 7px;border-radius:4px;white-space:nowrap}
+.sheet-price s{color:var(--muted);font-size:16px;font-weight:500;margin-left:6px}
+.sheet-price .off{font-size:13px;margin-left:4px}
+.tag-note{margin:12px 0 0;font-size:14px;color:var(--muted)}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -232,8 +240,8 @@ dialog[open]{animation:sheet .22s ease-out}
 .stage img{width:100%;height:100%;object-fit:cover}
 .stage img.fit{object-fit:contain;padding:14px}
 .stage iframe{position:absolute;left:0;top:50%;width:100%;aspect-ratio:16/9;transform:translateY(-50%);border:0}
-.thumbs{display:flex;gap:10px;margin-top:12px}
-.thumb{flex:1 1 0;max-width:120px;min-width:0;padding:0;border:0;background:transparent;text-align:center}
+.thumbs{display:flex;gap:10px;margin-top:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity}
+.thumb{flex:none;width:104px;padding:0;border:0;background:transparent;text-align:center;scroll-snap-align:start}
 .th-img{position:relative;display:block;aspect-ratio:4/3;border:1.5px solid var(--line);border-radius:6px;overflow:hidden;background:var(--tee)}
 .th-img img{width:100%;height:100%;object-fit:cover}
 .th-img img.fit{object-fit:contain;padding:4px}
@@ -278,6 +286,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
 .order-btn:hover{filter:brightness(1.08)}
 .order-btn[aria-disabled="true"]{background:#8f8f8f;pointer-events:none}
 .hint{min-height:1.5em;font-size:13px;color:var(--cobalt);font-weight:600;margin:6px 0 0;text-align:center}
+@media(max-width:859px){.hero-grid{padding:26px 0 28px}.hero h1{font-size:30px}.hero p{font-size:16px;margin-bottom:16px}.hero-card{display:none}.shop{padding-top:32px}}
 </style>
 </head>
 <body>
@@ -337,6 +346,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
           <li data-s="step2"></li>
           <li data-s="step3"></li>
         </ol>
+        <p class="tag-note" data-s="steps_note"></p>
       </div>
     </div>
   </section>
@@ -482,6 +492,7 @@ const CONFIG = {
   TAB_FAQ: "faq",
   TAB_REVIEWS: "reviews",
   TAB_VARIANTS: "variants",
+  TAB_MEDIA: "media",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -510,9 +521,10 @@ const CONFIG = {
     shop_title: "কালেকশন",
     shop_text: "পছন্দের প্রোডাক্টে ট্যাপ করুন, কাপড়, কালার ও সাইজ বেছে নিন।",
     steps_title: "অর্ডার করবেন যেভাবে",
-    step1: "পছন্দের ডিজাইনে ট্যাপ করুন।",
-    step2: "কাপড়, কালার, সাইজ ও ডেলিভারি এলাকা বেছে নিন।",
-    step3: "WhatsApp বা Messenger-এ অর্ডার পাঠান। মেসেজ তৈরি থাকবে, শুধু নাম, নম্বর ও ঠিকানা লিখে পাঠান।",
+    step1: "পছন্দের প্রোডাক্টে ট্যাপ করুন।",
+    step2: "কাপড়, কালার, সাইজ ও ডেলিভারি এলাকা বেছে “অর্ডার করুন” চাপুন।",
+    steps_note: "চাইলে WhatsApp, Messenger বা কল করেও অর্ডার করতে পারবেন।",
+    step3: "নাম, ফোন নম্বর ও ঠিকানা দিয়ে অর্ডার নিশ্চিত করুন। আমরা কনফার্ম করে জানাব।",
     fabric_title: "কাপড় নিজের চোখে দেখুন",
     fabric_text: "কাপড় বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
     reviews_title: "গ্রাহকদের কথা",
@@ -532,7 +544,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -590,6 +602,7 @@ async function loadData() {
   } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
   try { const r = (await fetchRows(CONFIG.TAB_FAQ)).filter(x => x.question && x.answer); if (r.length) S.faq = r; } catch (e) {}
   try { S.reviews = (await fetchRows(CONFIG.TAB_REVIEWS)).filter(x => x.name && x.text); } catch (e) {}
+  try { S.gallery = (await fetchRows(CONFIG.TAB_MEDIA)).filter(x => x.url && /^https?:/i.test(x.url)); } catch (e) {}
   try { S.variants = (await fetchRows(CONFIG.TAB_VARIANTS)).filter(x => x.id && x.color && (x.mockup || x.image)); } catch (e) {}
 }
 
@@ -614,12 +627,36 @@ function optionsFor(d, f, key) {
   return dl.filter(x => fl.some(y => same(x, y)));
 }
 const inStock = (d, f) => optionsFor(d, f, "colors").length > 0 && optionsFor(d, f, "size").length > 0;
-const priceOf = (d, f) => num(d.price, 0) + num(f && f.price_add, 0);
-function priceLabel(d) {
-  const ps = fabricsFor(d).map(f => priceOf(d, f));
-  if (!ps.length) return money(num(d.price, 0));
-  const min = Math.min(...ps);
-  return Math.max(...ps) > min ? `${money(min)} থেকে` : money(min);
+const listOf = (d, f) => num(d.price, 0) + num(f && f.price_add, 0);
+function parseDate(v) {
+  const t = String(v || "").trim(); if (!t) return null;
+  let m = t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/); if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  m = t.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+  return null;
+}
+function discActive(d) {
+  const now = Date.now(), f = parseDate(d.discount_from), u = parseDate(d.discount_until);
+  if (f && now < f.getTime()) return false;
+  if (u && now >= u.getTime() + 86400000) return false;   /* শেষ তারিখের পুরো দিনটাই চলবে */
+  return true;
+}
+function discountOf(d, lst) {
+  const raw = String(d.discount || "").trim();
+  if (!raw || !discActive(d)) return 0;
+  const amt = /%/.test(raw) ? Math.round(lst * num(raw, 0) / 100) : num(raw, 0);
+  return Math.max(0, Math.min(amt, lst - 1));
+}
+const priceOf = (d, f) => { const l = listOf(d, f); return l - discountOf(d, l); };
+function offerOf(d) {
+  const fs = fabricsFor(d);
+  const opts = (fs.length ? fs : [null]).map(f => { const l = listOf(d, f), dis = discountOf(d, l); return {list: l, final: l - dis, dis, pct: l ? Math.round(dis * 100 / l) : 0}; });
+  const best = opts.reduce((x, y) => y.final < x.final ? y : x);
+  return {...best, from: opts.some(o => o.final !== best.final)};
+}
+function priceLabel(d) { const o = offerOf(d); return o.from ? `${money(o.final)} থেকে` : money(o.final); }
+function priceHtml(d) {
+  const o = offerOf(d);
+  return `<b>${money(o.final)}${o.from ? " থেকে" : ""}</b>${o.dis ? `<s>${money(o.list)}</s><em class="off">−${o.pct}%</em>` : ""}`;
 }
 function delivery(area, qty) {
   const s = S.settings, extra = num(s.delivery_extra, 10);
@@ -664,13 +701,13 @@ function renderStatic() {
 function renderFaq() {
   const s = S.settings;
   const items = S.faq.length ? S.faq : [
+    {question: "কীভাবে অর্ডার করব?", answer: "পছন্দের প্রোডাক্টে ট্যাপ করে কাপড়, কালার ও সাইজ বেছে “অর্ডার করুন” চাপুন। নাম, ফোন নম্বর ও ঠিকানা দিলেই অর্ডার হয়ে যায়। চাইলে WhatsApp, Messenger বা কল করেও অর্ডার করতে পারবেন।"},
     {question: "প্রোডাক্টে সমস্যা থাকলে কী করব?", answer: s.return_text},
     {question: "ডেলিভারি কতদিনে পাব?", answer: `ডেলিভারি সময় ${s.delivery_time}।`},
     {question: "ডেলিভারি চার্জ কত?", answer: deliveryRule()},
     {question: "কোন GSM নেব?", answer: "GSM যত বেশি, কাপড় তত ঘন ও ভারী হয়। প্রতিটি GSM-এর আসল ভিডিও দেখে নিজের পছন্দমতো বেছে নিন।"},
     {question: "পেমেন্ট কীভাবে করব?", answer: s.payment_note},
-    {question: "WhatsApp না থাকলে কীভাবে অর্ডার করব?", answer: "Messenger-এ অথবা কল করে অর্ডার করতে পারবেন। অর্ডারের পর্দায় এই দুটো বোতাম আছে।"},
-    {question: "অর্ডার কনফার্ম হবে কীভাবে?", answer: "আপনার মেসেজ (WhatsApp বা Messenger) পেলে আমরা সেখানেই কনফার্ম করে জানাব।"}
+    {question: "অর্ডার কনফার্ম হবে কীভাবে?", answer: "অর্ডার জমা দেওয়ার পর আমরা আপনার নম্বরে যোগাযোগ করে কনফার্ম করব।"}
   ];
   $("faqList").innerHTML = items.map(i => `<details><summary>${esc(i.question)}</summary><p>${esc(i.answer)}</p></details>`).join("");
 }
@@ -725,10 +762,9 @@ function renderGrid() {
       <span class="card-img">
         <img loading="lazy" class="${contain ? "contain" : ""}" src="${esc(opt(src, 600))}" alt="${esc(d.name)}">
         ${d.badge ? `<span class="badge">${esc(d.badge)}</span>` : ""}
-        <span class="price-tag">${priceLabel(d)}</span>
         ${isSold(d) ? `<span class="soldout-flag">স্টক শেষ</span>` : ""}
       </span>
-      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-cat">${esc([d.type, d.category].filter(Boolean).join(" · "))}</span>${list(d.colors).length > 1 ? `<span class="sw" aria-label="কালার: ${esc(list(d.colors).join(", "))}">${list(d.colors).slice(0, 6).map(c => `<i class="dot sm" style="background:${COLORS[c.toLowerCase()] || "#bbb"}"></i>`).join("")}</span>` : ""}</span>
+      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-price">${priceHtml(d)}</span><span class="card-cat">${esc([d.type, d.category].filter(Boolean).join(" · "))}</span>${list(d.colors).length > 1 ? `<span class="sw" aria-label="কালার: ${esc(list(d.colors).join(", "))}">${list(d.colors).slice(0, 6).map(c => `<i class="dot sm" style="background:${COLORS[c.toLowerCase()] || "#bbb"}"></i>`).join("")}</span>` : ""}</span>
     </button>`;
   }).join("");
   const pg = $("pager");
@@ -790,16 +826,23 @@ function renderMedia() {
   /* ক্রম: পরলে কেমন দেখায় -> ডিজাইন -> কাপড়ের ভিডিও */
   if (mockup) items.push({k: "mockup", label: "পরলে কেমন দেখায়", src: mockup, thumb: mockup});
   if (image) items.push({k: "image", label: "ডিজাইন", src: image, thumb: image, fit: true});
+  S.gallery.filter(r => (!r.id || String(r.id) === String(d.id || d.name)) && (!r.gsm || norm(r.gsm) === S.gsm)).forEach((r, i) => {
+    const gv = ytId(r.url);
+    if (gv) items.push({k: "g" + i, label: r.label || "ভিডিও", vid: gv, thumb: `https://i.ytimg.com/vi/${gv}/mqdefault.jpg`});
+    else if (!/video|ভিডিও/i.test(r.type || "")) items.push({k: "g" + i, label: r.label || "ছবি", src: r.url, thumb: r.url, fit: true});
+  });
   const vid = f && ytId(f.video);
   if (vid) items.push({k: "video", label: `${gsmLabel(f)} ভিডিও`, vid, thumb: `https://i.ytimg.com/vi/${vid}/mqdefault.jpg`});
   if (!items.length) items.push({k: "none", label: ""});
   if (!items.some(i => i.k === S.media)) S.media = items[0].k;
   const it = items.find(i => i.k === S.media);
-  $("thumbs").innerHTML = items.length > 1 ? items.map(i => `<button type="button" class="thumb" data-k="${i.k}" aria-pressed="${i.k === S.media}"><span class="th-img"><img loading="lazy" class="${i.fit ? "fit" : ""}" src="${esc(opt(i.thumb, 240))}" alt="">${i.k === "video" ? `<i class="play"></i>` : ""}</span><span class="th-label">${esc(i.label)}</span></button>`).join("") : "";
+  const sc = $("thumbs").scrollLeft;
+  $("thumbs").innerHTML = items.length > 1 ? items.map(i => `<button type="button" class="thumb" data-k="${i.k}" aria-pressed="${i.k === S.media}"><span class="th-img"><img loading="lazy" class="${i.fit ? "fit" : ""}" src="${esc(opt(i.thumb, 240))}" alt="">${i.vid ? `<i class="play"></i>` : ""}</span><span class="th-label">${esc(i.label)}</span></button>`).join("") : "";
+  $("thumbs").scrollLeft = sc;
   const key = it.k + (it.src || it.vid || "");
   if (key !== S.stageKey) {
     S.stageKey = key;
-    $("stage").innerHTML = it.k === "video"
+    $("stage").innerHTML = it.vid
       ? `<iframe src="https://www.youtube-nocookie.com/embed/${it.vid}?rel=0" title="${esc(it.label)}" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
       : it.src ? `<img class="${it.fit ? "fit" : ""}" src="${esc(opt(it.src, 900))}" alt="${esc(d.name)}">` : "";
   }
@@ -830,9 +873,9 @@ function openSheet(d) {
 
 function updateOrder() {
   const d = S.current; if (!d) return;
-  const f = curFab(), unit = priceOf(d, f), items = unit * S.qty;
+  const f = curFab(), unit = priceOf(d, f), lst = listOf(d, f), items = unit * S.qty;
   $("qVal").textContent = S.qty;
-  $("sheetPrice").textContent = money(unit);
+  $("sheetPrice").innerHTML = `${money(unit)}${lst > unit ? ` <s>${money(lst)}</s> <em class="off">−${Math.round((lst - unit) * 100 / lst)}%</em>` : ""}`;
   $("sumLabel").textContent = S.qty > 1 ? `মূল্য (${S.qty} × ${money(unit)})` : "মূল্য";
   $("sumItems").textContent = money(items);
   const del = delivery(S.area, S.qty);
@@ -861,7 +904,7 @@ function updateOrder() {
   ].join("\n");
   [btn, wa2].forEach(b => { b.href = waLink(msg); b.setAttribute("aria-disabled", "false"); });
   S.msg = msg; $("msgBtn").disabled = false; $("formBtn").disabled = false; S.ready = true;
-  S.orderData = {design_id: String(d.id || d.name), design: d.name, type: d.type || "", fabric: f ? gsmLabel(f) : "", color: S.color, size: S.size, qty: S.qty, unit_price: unit, items_total: items, delivery_area: areaName, delivery_charge: del, total: items + del};
+  S.orderData = {design_id: String(d.id || d.name), design: d.name, type: d.type || "", fabric: f ? gsmLabel(f) : "", color: S.color, size: S.size, qty: S.qty, list_price: lst, product_discount: lst - unit, unit_price: unit, items_total: items, delivery_area: areaName, delivery_charge: del, total: items + del};
   $("hint").textContent = hasForm() ? "নিচের বোতামে ট্যাপ করে ডেলিভারির তথ্য দিন।" : "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
 }
 
