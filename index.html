@@ -172,6 +172,18 @@ section[id]{scroll-margin-top:72px}
 .info-steps{margin:0 0 16px;padding-left:1.3em}
 .info-steps li{margin-bottom:8px}
 
+.code-box{margin:0 0 14px;border:1.5px dashed #9a9993;border-radius:8px;padding:10px 12px}
+.code-box summary{cursor:pointer;font-weight:600;list-style:none}
+.code-box summary::-webkit-details-marker{display:none}
+.code-box summary::before{content:"+ ";font-family:var(--display)}
+.code-box[open] summary::before{content:"− "}
+.code-row{display:flex;gap:8px;margin-top:10px}
+.code-row input{flex:1;min-width:0;padding:10px 12px;border:1.5px solid var(--line);border-radius:6px;font:inherit;font-size:16px;text-transform:uppercase;background:#fff;color:var(--ink)}
+.code-msg{min-height:1.4em;margin:8px 0 0;font-size:14px;font-weight:600}
+.code-msg.ok{color:var(--wa)}
+.code-msg.bad{color:#b3261e}
+.code-help{margin:6px 0 2px;font-size:14px;color:var(--muted)}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -446,8 +458,19 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
       </fieldset>
       <fieldset><legend>ডেলিভারি এলাকা</legend><div class="opts" id="areaOpts"></div></fieldset>
 
+      <details class="code-box" id="codeBox" hidden>
+        <summary>ডিসকাউন্ট কোড আছে?</summary>
+        <div class="code-row">
+          <input id="codeInput" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="কোড লিখুন" maxlength="30" aria-label="ডিসকাউন্ট কোড">
+          <button type="button" class="alt-btn" id="codeApply">প্রয়োগ করুন</button>
+        </div>
+        <p class="code-msg" id="codeMsg" role="status"></p>
+        <p class="code-help"><span data-s="code_help"></span> <a id="codeFb" href="#" target="_blank" rel="noopener" hidden>Facebook page-এ যান</a></p>
+      </details>
+
       <div class="sum">
         <div><span id="sumLabel">মূল্য</span><span id="sumItems"></span></div>
+        <div id="sumCodeRow" hidden><span id="sumCodeLabel"></span><span id="sumCode"></span></div>
         <div><span>ডেলিভারি চার্জ</span><span id="sumDel"></span></div>
         <div class="grand"><span>মোট</span><strong id="sumTotal"></strong></div>
       </div>
@@ -561,6 +584,7 @@ const CONFIG = {
   TAB_VARIANTS: "variants",
   TAB_MEDIA: "media",
   TAB_VIDEOS: "videos",
+  TAB_CODES: "codes",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -597,6 +621,7 @@ const CONFIG = {
     fabric_text: "কাপড় বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
     reviews_title: "গ্রাহকদের কথা",
     faq_title: "সাধারণ প্রশ্ন",
+    code_help: "কোড পেতে আমাদের Facebook page দেখুন বা ফলো করুন।",
     about_title: "আমাদের সম্পর্কে",
     about_text: "TWISTURE একটি বাংলাদেশি ক্লদিং ও অ্যাপারেল ব্র্যান্ড। জয়দেবপুর, গাজীপুর থেকে আমরা ট্রেন্ডি ডিজাইনের পোশাক নিয়ে কাজ করি। প্রতিটি কাপড়ের আসল ভিডিও দেখিয়ে আমরা চাই আপনি নিশ্চিন্তে বেছে নিতে পারেন।",
     custom_title: "পছন্দের ডিজাইন বানিয়ে নিন",
@@ -620,7 +645,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, codes: [], code: null, msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -678,6 +703,7 @@ async function loadData() {
   } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
   try { const r = (await fetchRows(CONFIG.TAB_FAQ)).filter(x => x.question && x.answer); if (r.length) S.faq = r; } catch (e) {}
   try { S.reviews = (await fetchRows(CONFIG.TAB_REVIEWS)).filter(x => x.name && x.text); } catch (e) {}
+  try { S.codes = (await fetchRows(CONFIG.TAB_CODES)).filter(x => x.code); } catch (e) {}
   try { S.videos = (await fetchRows(CONFIG.TAB_VIDEOS)).filter(x => ytId(x.url)); } catch (e) {}
   try { S.gallery = (await fetchRows(CONFIG.TAB_MEDIA)).filter(x => x.url && /^https?:/i.test(x.url)); } catch (e) {}
   try { S.variants = (await fetchRows(CONFIG.TAB_VARIANTS)).filter(x => x.id && x.color && (x.mockup || x.image)); } catch (e) {}
@@ -766,6 +792,7 @@ function renderStatic() {
   $("msgBtn").hidden = !messengerBase();
   $("callBtn").href = `tel:+${digits(s.phone || s.whatsapp)}`;
   const wa = waLink("হ্যালো TWISTURE, আমি একটা বিষয়ে জানতে চাই।");
+  if (s.facebook) { $("codeFb").href = s.facebook; $("codeFb").hidden = false; }
   $("hdrWa").href = wa; $("waFab").href = wa;
   if (s.size_chart_image) { const a = $("sizeChartLink"); a.href = s.size_chart_image; a.hidden = false; }
   const links = [`<a href="${esc(waLink(""))}" target="_blank" rel="noopener">WhatsApp</a>`];
@@ -790,6 +817,7 @@ function renderFaq() {
     {question: "ডেলিভারি চার্জ কত?", answer: deliveryRule()},
     {question: "কোন GSM নেব?", answer: "GSM যত বেশি, কাপড় তত ঘন ও ভারী হয়। প্রতিটি GSM-এর আসল ভিডিও দেখে নিজের পছন্দমতো বেছে নিন।"},
     {question: "পেমেন্ট কীভাবে করব?", answer: s.payment_note},
+    {question: "ডিসকাউন্ট কোড কোথায় পাব?", answer: s.code_help},
     {question: "অর্ডার কনফার্ম হবে কীভাবে?", answer: "অর্ডার জমা দেওয়ার পর আমরা আপনার নম্বরে যোগাযোগ করে কনফার্ম করব।"}
   ];
   $("faqList").innerHTML = items.map(i => `<details><summary>${esc(i.question)}</summary><p>${esc(i.answer)}</p></details>`).join("");
@@ -948,7 +976,35 @@ function renderMedia() {
   if (note) $("stageNote").textContent = `ছবিতে ${firstColor} কালার দেখানো হয়েছে`;
 }
 
+const NO = /^(no|false|0|না|off)/i;
+function codeActive(r) {
+  if (NO.test(String(r.active || "").trim())) return false;
+  const now = Date.now(), f = parseDate(r.valid_from), u = parseDate(r.valid_until);
+  if (f && now < f.getTime()) return false;
+  if (u && now >= u.getTime() + 86400000) return false;
+  return true;
+}
+function checkCode(d, raw) {
+  const c = String(raw || "").trim();
+  if (!c) return {err: "কোড লিখুন।"};
+  const row = S.codes.find(x => same(x.code, c));
+  if (!row) return {err: "ভুল কোড। আবার দেখে লিখুন।"};
+  if (!codeActive(row)) return {err: "এই কোডের মেয়াদ শেষ হয়েছে।"};
+  if (!list(d.code).some(x => same(x, c))) return {err: "এই প্রোডাক্টে কোডটি চলবে না।"};
+  const pct = Math.min(100, num(row.percent, 0));
+  if (pct <= 0) return {err: "ভুল কোড। আবার দেখে লিখুন।"};
+  return {code: String(row.code).trim(), pct};
+}
+function applyCode() {
+  const r = checkCode(S.current, $("codeInput").value), m = $("codeMsg");
+  S.code = r.err ? null : r;
+  m.className = "code-msg " + (r.err ? "bad" : "ok");
+  m.textContent = r.err ? r.err : `✓ কোড ঠিক আছে। ${r.pct}% ছাড় যোগ হয়েছে।`;
+  updateOrder();
+}
+
 function openSheet(d) {
+  S.code = null; $("codeInput").value = ""; $("codeMsg").textContent = ""; $("codeMsg").className = "code-msg"; $("codeBox").open = false; $("codeBox").hidden = !list(d.code).length;
   S.current = d; S.qty = 1; S.color = ""; S.size = ""; S.area = ""; S.media = ""; S.stageKey = "";
   S.fabs = fabricsFor(d);
   const first = S.fabs.find(f => inStock(d, f)) || S.fabs[0];
@@ -968,11 +1024,14 @@ function openSheet(d) {
 
 function updateOrder() {
   const d = S.current; if (!d) return;
-  const f = curFab(), unit = priceOf(d, f), lst = listOf(d, f), items = unit * S.qty;
+  const f = curFab(), unit = priceOf(d, f), lst = listOf(d, f);
+  const cdUnit = S.code ? Math.round(unit * S.code.pct / 100) : 0, gross = unit * S.qty, codeTotal = cdUnit * S.qty, items = gross - codeTotal;
   $("qVal").textContent = S.qty;
   $("sheetPrice").innerHTML = `${money(unit)}${lst > unit ? ` <s>${money(lst)}</s> <em class="off">−${Math.round((lst - unit) * 100 / lst)}%</em>` : ""}`;
   $("sumLabel").textContent = S.qty > 1 ? `মূল্য (${S.qty} × ${money(unit)})` : "মূল্য";
-  $("sumItems").textContent = money(items);
+  $("sumItems").textContent = money(gross);
+  $("sumCodeRow").hidden = !S.code;
+  if (S.code) { $("sumCodeLabel").textContent = `কোড ${S.code.code} (−${S.code.pct}%)`; $("sumCode").textContent = "−" + money(codeTotal); }
   const del = delivery(S.area, S.qty);
   $("sumDel").textContent = S.area ? money(del) : "এলাকা বেছে নিন";
   $("sumTotal").textContent = money(items + del);
@@ -992,14 +1051,15 @@ function updateOrder() {
     `কালার: ${S.color}`,
     `সাইজ: ${S.size}`,
     `পরিমাণ: ${S.qty}টি`,
-    `মূল্য: ${money(items)}`,
+    `মূল্য: ${money(gross)}`,
+    ...(S.code ? [`ডিসকাউন্ট কোড ${S.code.code} (−${S.code.pct}%): −${money(codeTotal)}`] : []),
     `ডেলিভারি (${areaName}): ${money(del)}`,
     `মোট: ${money(items + del)}`, "",
     "নাম:", "ফোন নম্বর:", "সম্পূর্ণ ঠিকানা:"
   ].join("\n");
   [btn, wa2].forEach(b => { b.href = waLink(msg); b.setAttribute("aria-disabled", "false"); });
   S.msg = msg; $("msgBtn").disabled = false; $("formBtn").disabled = false; S.ready = true;
-  S.orderData = {design_id: String(d.id || d.name), design: d.name, type: d.type || "", fabric: f ? gsmLabel(f) : "", color: S.color, size: S.size, qty: S.qty, list_price: lst, product_discount: lst - unit, unit_price: unit, items_total: items, delivery_area: areaName, delivery_charge: del, total: items + del};
+  S.orderData = {design_id: String(d.id || d.name), design: d.name, type: d.type || "", fabric: f ? gsmLabel(f) : "", color: S.color, size: S.size, qty: S.qty, list_price: lst, product_discount: lst - unit, unit_price: unit, items_total: items, delivery_area: areaName, delivery_charge: del, total: items + del, discount_code: S.code ? S.code.code : "", code_percent: S.code ? S.code.pct : 0, code_discount: codeTotal, code_note: S.code ? `ডিসকাউন্ট কোড ${S.code.code} (−${S.code.pct}%, −${money(codeTotal)})` : ""};
   $("hint").textContent = hasForm() ? "নিচের বোতামে ট্যাপ করে ডেলিভারির তথ্য দিন।" : "WhatsApp খুললে নাম, নম্বর ও ঠিকানা লিখে Send করুন।";
 }
 
@@ -1072,7 +1132,7 @@ $("odFormEl").addEventListener("submit", async e => {
   if (fd.get("website")) { showDone(id, phone); return; }   /* spam trap */
   odError("");
   $("odSubmit").disabled = true; $("odSubmit").textContent = "পাঠানো হচ্ছে…";
-  const payload = {...S.orderData, order_id: id, name, phone, address, note, page: location.href.split("#")[0], hp: ""};
+  const payload = {...S.orderData, order_id: id, name, phone, address, note: [note, S.orderData.code_note].filter(Boolean).join(" | "), page: location.href.split("#")[0], hp: ""};
   try {
     await fetch(S.settings.order_endpoint.trim(), {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload)});
     showDone(id, phone);
@@ -1105,6 +1165,11 @@ $("msgBtn").addEventListener("click", () => {
   const done = () => { $("hint").textContent = "অর্ডারের মেসেজ কপি হয়েছে। Messenger-এর মেসেজ বক্স ফাঁকা থাকলে Paste করে পাঠান।"; };
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(S.msg).then(done, () => {});
   else { const t = document.createElement("textarea"); t.value = S.msg; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e) {} t.remove(); }
+});
+$("codeApply").onclick = applyCode;
+$("codeInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); applyCode(); } });
+$("codeInput").addEventListener("input", () => {
+  if (S.code && !same($("codeInput").value, S.code.code)) { S.code = null; $("codeMsg").textContent = ""; $("codeMsg").className = "code-msg"; updateOrder(); }
 });
 $("qMinus").onclick = () => { S.qty = Math.max(1, S.qty - 1); updateOrder(); };
 $("qPlus").onclick = () => { S.qty = Math.min(20, S.qty + 1); updateOrder(); };
