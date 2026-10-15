@@ -152,6 +152,26 @@ section[id]{scroll-margin-top:72px}
 .sheet-price .off{font-size:13px;margin-left:4px}
 .tag-note{margin:12px 0 0;font-size:14px;color:var(--muted)}
 
+.hdr-actions{display:flex;gap:8px;align-items:center}
+.menu-btn{background:transparent;cursor:pointer;gap:6px;font-family:inherit;color:var(--ink)}
+.dots{font-weight:800;font-size:18px;line-height:1}
+.vplay{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:var(--tee)}
+.vplay img{width:100%;height:100%;object-fit:cover}
+.vplay .play{position:absolute;inset:0;margin:auto;width:56px;height:56px;border-radius:50%;background:rgba(243,242,238,.92)}
+.vplay .play::after{content:"";position:absolute;left:22px;top:16px;border-left:18px solid var(--tee);border-top:12px solid transparent;border-bottom:12px solid transparent}
+.vid-list{margin-top:10px}
+.vid-list .thumb{width:130px}
+#menuDlg{max-width:100%}
+@media(min-width:860px){#menuDlg{max-width:380px;margin:64px 16px auto auto}dialog.info{max-width:520px}}
+.mn-list{margin:0 0 4px}
+.mn-item{display:block;width:100%;text-align:left;padding:14px 4px;border:0;border-bottom:1px solid #c4c3bc;background:transparent;font:inherit;font-weight:600;font-size:17px;text-decoration:none;color:var(--ink);cursor:pointer}
+.mn-item:hover{background:#e7e6df}
+.mn-sub{margin:18px 0 8px;color:var(--muted);font-size:14px;font-weight:600}
+.mn-social{display:flex;flex-wrap:wrap;gap:8px}
+.info-text{margin:0 0 14px;line-height:1.7}
+.info-steps{margin:0 0 16px;padding-left:1.3em}
+.info-steps li{margin-bottom:8px}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -287,6 +307,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
 .order-btn[aria-disabled="true"]{background:#8f8f8f;pointer-events:none}
 .hint{min-height:1.5em;font-size:13px;color:var(--cobalt);font-weight:600;margin:6px 0 0;text-align:center}
 @media(max-width:859px){.hero-grid{padding:26px 0 28px}.hero h1{font-size:30px}.hero p{font-size:16px;margin-bottom:16px}.hero-card{display:none}.shop{padding-top:32px}}
+@media(max-width:479px){#hdrWa{display:none}}
 </style>
 </head>
 <body>
@@ -296,7 +317,10 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#top" aria-label="TWISTURE হোম"><span class="logo" role="img" aria-label="TWISTURE লোগো"></span><span class="mark">TWISTURE</span></a>
-    <a class="btn-line" id="hdrWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+    <div class="hdr-actions">
+      <a class="btn-line" id="hdrWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <button type="button" class="btn-line menu-btn" id="menuBtn" aria-haspopup="dialog"><span class="dots" aria-hidden="true">⋮</span> মেনু</button>
+    </div>
   </div>
 </header>
 
@@ -359,6 +383,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
       <div class="fabric-grid">
         <div>
           <div class="video" id="videoBox"></div>
+          <div class="thumbs vid-list" id="vidList"></div>
           <div class="photos" id="fabricPhotos"></div>
         </div>
         <div>
@@ -376,7 +401,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     </div>
   </section>
 
-  <section class="faq">
+  <section class="faq" id="faq">
     <div class="wrap">
       <h2 class="section-h" data-s="faq_title"></h2>
       <div id="faqList"></div>
@@ -445,6 +470,48 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
   </div>
 </dialog>
 
+<dialog id="menuDlg" aria-label="মেনু">
+  <div class="od">
+    <button type="button" class="close" id="mnClose" aria-label="বন্ধ করুন">×</button>
+    <h2>মেনু</h2>
+    <nav class="mn-list">
+      <a class="mn-item" href="#shop" data-close>কালেকশন</a>
+      <a class="mn-item" href="#fabric" data-close>কাপড় দেখুন</a>
+      <button type="button" class="mn-item" data-open="customDlg">পছন্দের ডিজাইন বানিয়ে নিন</button>
+      <a class="mn-item" href="#faq" data-close>সাধারণ প্রশ্ন</a>
+      <button type="button" class="mn-item" data-open="aboutDlg">আমাদের সম্পর্কে</button>
+    </nav>
+    <p class="mn-sub">আমাদের সাথে থাকুন</p>
+    <div class="mn-social" id="mnSocial"></div>
+  </div>
+</dialog>
+
+<dialog id="aboutDlg" class="info" aria-labelledby="abTitle">
+  <div class="od">
+    <button type="button" class="close" data-x aria-label="বন্ধ করুন">×</button>
+    <h2 id="abTitle" data-s="about_title"></h2>
+    <p class="info-text" data-s="about_text"></p>
+  </div>
+</dialog>
+
+<dialog id="customDlg" class="info" aria-labelledby="cuTitle">
+  <div class="od">
+    <button type="button" class="close" data-x aria-label="বন্ধ করুন">×</button>
+    <h2 id="cuTitle" data-s="custom_title"></h2>
+    <p class="info-text" data-s="custom_text"></p>
+    <ol class="info-steps">
+      <li data-s="custom_step1"></li>
+      <li data-s="custom_step2"></li>
+      <li data-s="custom_step3"></li>
+    </ol>
+    <div class="od-actions">
+      <a class="order-btn" id="cuWa" href="#" target="_blank" rel="noopener">WhatsApp-এ স্ক্রিনশট পাঠান</a>
+      <button type="button" class="alt-btn" id="cuMsg" hidden>Messenger-এ পাঠান</button>
+    </div>
+    <p class="od-priv" data-s="custom_note"></p>
+  </div>
+</dialog>
+
 <dialog id="orderDlg" aria-labelledby="odTitle">
   <div class="od">
     <button type="button" class="close" id="odClose" aria-label="বন্ধ করুন">×</button>
@@ -493,6 +560,7 @@ const CONFIG = {
   TAB_REVIEWS: "reviews",
   TAB_VARIANTS: "variants",
   TAB_MEDIA: "media",
+  TAB_VIDEOS: "videos",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -529,6 +597,14 @@ const CONFIG = {
     fabric_text: "কাপড় বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
     reviews_title: "গ্রাহকদের কথা",
     faq_title: "সাধারণ প্রশ্ন",
+    about_title: "আমাদের সম্পর্কে",
+    about_text: "TWISTURE একটি বাংলাদেশি ক্লদিং ও অ্যাপারেল ব্র্যান্ড। জয়দেবপুর, গাজীপুর থেকে আমরা ট্রেন্ডি ডিজাইনের পোশাক নিয়ে কাজ করি। প্রতিটি কাপড়ের আসল ভিডিও দেখিয়ে আমরা চাই আপনি নিশ্চিন্তে বেছে নিতে পারেন।",
+    custom_title: "পছন্দের ডিজাইন বানিয়ে নিন",
+    custom_text: "কোথাও ভালো লাগা ডিজাইন দেখেছেন? স্ক্রিনশট পাঠান, আমরা আপনার জন্য টি-শার্টে ছাপিয়ে দেব।",
+    custom_step1: "TikTok, YouTube, Facebook বা Google-এ পছন্দের ডিজাইনের স্ক্রিনশট নিন।",
+    custom_step2: "নিচের বোতামে WhatsApp বা Messenger-এ আমাদের পাঠান।",
+    custom_step3: "আমরা দাম ও সময় জানিয়ে দেব। আপনি রাজি হলে ডিজাইনটি বানিয়ে দেওয়া হবে।",
+    custom_note: "কপিরাইটযুক্ত ডিজাইন সবসময় করা সম্ভব নাও হতে পারে।",
     facebook: "https://www.facebook.com/profile.php?id=61575888545710"
   }
 };
@@ -544,7 +620,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -602,6 +678,7 @@ async function loadData() {
   } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
   try { const r = (await fetchRows(CONFIG.TAB_FAQ)).filter(x => x.question && x.answer); if (r.length) S.faq = r; } catch (e) {}
   try { S.reviews = (await fetchRows(CONFIG.TAB_REVIEWS)).filter(x => x.name && x.text); } catch (e) {}
+  try { S.videos = (await fetchRows(CONFIG.TAB_VIDEOS)).filter(x => ytId(x.url)); } catch (e) {}
   try { S.gallery = (await fetchRows(CONFIG.TAB_MEDIA)).filter(x => x.url && /^https?:/i.test(x.url)); } catch (e) {}
   try { S.variants = (await fetchRows(CONFIG.TAB_VARIANTS)).filter(x => x.id && x.color && (x.mockup || x.image)); } catch (e) {}
 }
@@ -696,6 +773,12 @@ function renderStatic() {
     if (s[k]) links.push(`<a href="${esc(s[k])}" target="_blank" rel="noopener">${n}</a>`);
   });
   $("footLinks").innerHTML = links.join("");
+  const mb = messengerBase();
+  $("mnSocial").innerHTML = links.concat(mb ? [`<a href="${esc(mb)}" target="_blank" rel="noopener">Messenger</a>`] : []).map(l => l.replace("<a ", '<a class="alt-btn" ')).join("");
+  const cuMsg = "হ্যালো TWISTURE, আমি একটা ডিজাইন বানিয়ে নিতে চাই। স্ক্রিনশট পাঠাচ্ছি।";
+  $("cuWa").href = waLink(cuMsg);
+  $("cuMsg").hidden = !mb;
+  $("cuMsg").onclick = () => window.open(`${mb}${mb.includes("?") ? "&" : "?"}text=${encodeURIComponent(cuMsg)}`, "_blank", "noopener");
 }
 
 function renderFaq() {
@@ -776,15 +859,27 @@ function renderGrid() {
 }
 
 /* ---------- fabric section ---------- */
+function renderVideo(play) {
+  const v = S.vlist[S.vi], sc = $("vidList").scrollLeft;
+  if (!v) { $("videoBox").innerHTML = `<div class="none">এই কাপড়ের ভিডিও শীঘ্রই আসছে।</div>`; $("vidList").innerHTML = ""; return; }
+  $("videoBox").innerHTML = play
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${v.id}?rel=0&autoplay=1" title="${esc(v.title)}" allow="accelerometer; autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+    : `<button type="button" class="vplay" aria-label="${esc(v.title)} চালান"><img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt=""><i class="play"></i></button>`;
+  $("vidList").innerHTML = S.vlist.length > 1 ? S.vlist.map((x, i) => `<button type="button" class="thumb" data-i="${i}" aria-pressed="${i === S.vi}"><span class="th-img"><img loading="lazy" src="https://i.ytimg.com/vi/${x.id}/mqdefault.jpg" alt=""><i class="play"></i></span><span class="th-label">${esc(x.title)}</span></button>`).join("") : "";
+  $("vidList").scrollLeft = sc;
+}
 function renderFabric() {
   const fabs = S.fabrics;
   if (!S.fabView || !fabs.some(f => fabUid(f) === S.fabView)) S.fabView = fabUid(fabs[0]);
   $("gsmTabs").innerHTML = fabs.map(f => `<button type="button" class="chip-f" data-g="${esc(fabUid(f))}" aria-pressed="${fabUid(f) === S.fabView}">${esc(fabLabel(f))}</button>`).join("");
   $("gsmTabs").hidden = fabs.length < 2;
-  const f = fabs.find(x => fabUid(x) === S.fabView), vid = ytId(f.video);
-  $("videoBox").innerHTML = vid
-    ? `<iframe src="https://www.youtube-nocookie.com/embed/${vid}?rel=0" title="${esc(gsmLabel(f))} কাপড়ের ভিডিও" loading="lazy" allow="accelerometer; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
-    : `<div class="none">এই কাপড়ের ভিডিও শীঘ্রই আসছে।</div>`;
+  const f = fabs.find(x => fabUid(x) === S.fabView);
+  S.vlist = []; S.vi = 0;
+  const own = ytId(f.video);
+  if (own) S.vlist.push({id: own, title: `${gsmLabel(f)} কাপড়ের রিভিউ`});
+  S.videos.filter(v => !v.gsm || norm(v.gsm) === gsmKey(f)).forEach(v => { const y = ytId(v.url); if (y && !S.vlist.some(x => x.id === y)) S.vlist.push({id: y, title: v.title || "ভিডিও"}); });
+  S.vlist = S.vlist.slice(0, 8);
+  renderVideo(false);
   const photos = list(f.photos).length ? list(f.photos) : (fabs.length === 1 ? list(S.settings.fabric_images) : []);
   $("fabricPhotos").innerHTML = photos.map(u => `<img loading="lazy" src="${esc(opt(u, 500))}" alt="${esc(gsmLabel(f))} কাপড়ের ক্লোজ-আপ">`).join("");
   const rows = [["কাপড়", fabLabel(f)]];
@@ -918,6 +1013,19 @@ $("pager").addEventListener("click", e => {
   S.page = Number(b.dataset.p); renderGrid();
   $("shop").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
 });
+$("videoBox").addEventListener("click", e => { if (e.target.closest(".vplay")) renderVideo(true); });
+$("vidList").addEventListener("click", e => { const b = e.target.closest(".thumb"); if (!b) return; S.vi = Number(b.dataset.i); renderVideo(true); });
+$("menuBtn").onclick = () => $("menuDlg").showModal();
+$("mnClose").onclick = () => $("menuDlg").close();
+$("menuDlg").addEventListener("click", e => {
+  if (e.target === $("menuDlg")) { $("menuDlg").close(); return; }
+  const a = e.target.closest("a[data-close]");
+  if (a) { e.preventDefault(); $("menuDlg").close(); const t = document.querySelector(a.getAttribute("href")); if (t) t.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); return; }
+  const o = e.target.closest("[data-open]");
+  if (o) { $("menuDlg").close(); $(o.dataset.open).showModal(); }
+});
+document.querySelectorAll("dialog .close[data-x]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
+["aboutDlg", "customDlg"].forEach(id => $(id).addEventListener("click", e => { if (e.target === $(id)) $(id).close(); }));
 $("heroCard").addEventListener("click", e => openById(e.currentTarget.dataset.id));
 $("gsmTabs").addEventListener("click", e => { const b = e.target.closest("button[data-g]"); if (!b) return; S.fabView = b.dataset.g; renderFabric(); });
 $("thumbs").addEventListener("click", e => { const b = e.target.closest(".thumb"); if (!b) return; S.media = b.dataset.k; renderMedia(); });
