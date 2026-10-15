@@ -184,6 +184,18 @@ section[id]{scroll-margin-top:72px}
 .code-msg.bad{color:#b3261e}
 .code-help{margin:6px 0 2px;font-size:14px;color:var(--muted)}
 
+.ref-banner{margin:28px 0 0;border:1.5px solid var(--line);border-radius:10px;background:var(--tee);color:var(--paper);padding:18px;display:flex;flex-wrap:wrap;gap:14px 18px;align-items:center;justify-content:space-between}
+.ref-banner h3{font-family:var(--display);font-size:22px;line-height:1.25;margin:0 0 4px}
+.ref-banner p{margin:0;color:#cfcfd2;font-size:15px}
+.ref-banner .order-btn{background:var(--paper);color:var(--tee);flex:none;padding:12px 20px}
+.ref-banner .order-btn:hover{filter:none;background:#fff}
+.terms{margin:0 0 6px}
+.terms summary{cursor:pointer;font-weight:600;margin-bottom:8px}
+.pre{white-space:pre-line}
+.rf-h{font-family:var(--display);font-size:18px;margin:18px 0 10px}
+.lbl{display:block;font-weight:700}
+.fld .code-row{margin-top:6px}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -370,6 +382,10 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
         <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
       </div>
       <nav class="pager" id="pager" aria-label="পেজ" hidden></nav>
+      <aside class="ref-banner" id="refBanner" aria-label="রেফার প্রোগ্রাম">
+        <div><h3 data-s="ref_title"></h3><p data-s="ref_banner_text"></p></div>
+        <button type="button" class="order-btn form" id="refOpen">বিস্তারিত দেখুন</button>
+      </aside>
     </div>
   </section>
 
@@ -500,6 +516,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <nav class="mn-list">
       <a class="mn-item" href="#shop" data-close>কালেকশন</a>
       <a class="mn-item" href="#fabric" data-close>কাপড় দেখুন</a>
+      <button type="button" class="mn-item" data-open="refDlg"><span data-s="ref_title"></span></button>
       <button type="button" class="mn-item" data-open="customDlg">পছন্দের ডিজাইন বানিয়ে নিন</button>
       <a class="mn-item" href="#faq" data-close>সাধারণ প্রশ্ন</a>
       <button type="button" class="mn-item" data-open="aboutDlg">আমাদের সম্পর্কে</button>
@@ -535,6 +552,39 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
   </div>
 </dialog>
 
+<dialog id="refDlg" class="info" aria-labelledby="rfTitle">
+  <div class="od">
+    <button type="button" class="close" data-x aria-label="বন্ধ করুন">×</button>
+    <div id="rfMain">
+      <h2 id="rfTitle" data-s="ref_title"></h2>
+      <p class="info-text" data-s="ref_text"></p>
+      <ol class="info-steps">
+        <li data-s="ref_step1"></li>
+        <li data-s="ref_step2"></li>
+        <li data-s="ref_step3"></li>
+      </ol>
+      <details class="terms"><summary>শর্তাবলি</summary><p class="info-text pre" data-s="ref_terms"></p></details>
+      <h3 class="rf-h">আবেদন করুন</h3>
+      <form id="rfFormEl" novalidate>
+        <label class="fld">নাম<input name="name" autocomplete="name" maxlength="80"></label>
+        <label class="fld">WhatsApp নম্বর<input name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" maxlength="20"></label>
+        <label class="fld">ইমেইল<input name="email" type="email" autocomplete="email" maxlength="120"></label>
+        <label class="fld">ঠিকানা<textarea name="address" rows="2" autocomplete="street-address" maxlength="300"></textarea></label>
+        <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="od-err" id="rfErr" role="alert"></p>
+        <button type="submit" class="order-btn form od-submit" id="rfSubmit">আবেদন করুন</button>
+        <p class="od-priv">আপনার তথ্য শুধু রেফার প্রোগ্রামের জন্য ব্যবহার হবে।</p>
+      </form>
+      <div class="od-actions" id="rfAlt" hidden><a class="order-btn" id="rfWa" href="#" target="_blank" rel="noopener">WhatsApp-এ আবেদন করুন</a></div>
+    </div>
+    <div id="rfDone" hidden>
+      <h2>আবেদন জমা হয়েছে ✓</h2>
+      <p class="info-text" data-s="ref_done_text"></p>
+      <button type="button" class="order-btn form" id="rfOk">ঠিক আছে</button>
+    </div>
+  </div>
+</dialog>
+
 <dialog id="orderDlg" aria-labelledby="odTitle">
   <div class="od">
     <button type="button" class="close" id="odClose" aria-label="বন্ধ করুন">×</button>
@@ -546,6 +596,9 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
         <label class="fld">ফোন নম্বর<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX" maxlength="20" required></label>
         <label class="fld">সম্পূর্ণ ঠিকানা<textarea name="address" rows="3" autocomplete="street-address" maxlength="300" placeholder="বাসা/রাস্তা, এলাকা, থানা, জেলা" required></textarea></label>
         <label class="fld">নোট (ঐচ্ছিক)<input name="note" maxlength="200" placeholder="কিছু জানাতে চাইলে লিখুন"></label>
+        <div class="fld"><span class="lbl">রেফার কোড (থাকলে)</span>
+          <div class="code-row"><input id="refInput" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="যেমন TWR-AB12" aria-label="রেফার কোড"><button type="button" class="alt-btn" id="refApply">প্রয়োগ করুন</button></div>
+          <p class="code-msg" id="refMsg" role="status"></p></div>
         <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="od-err" id="odErr" role="alert"></p>
         <button type="submit" class="order-btn form od-submit" id="odSubmit">অর্ডার নিশ্চিত করুন</button>
@@ -585,6 +638,7 @@ const CONFIG = {
   TAB_MEDIA: "media",
   TAB_VIDEOS: "videos",
   TAB_CODES: "codes",
+  TAB_REFS: "referrals",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -621,6 +675,14 @@ const CONFIG = {
     fabric_text: "কাপড় বেছে নিন, ওই কাপড়ের আসল ভিডিও দেখুন।",
     reviews_title: "গ্রাহকদের কথা",
     faq_title: "সাধারণ প্রশ্ন",
+    ref_title: "রেফার করে ফ্রি টি-শার্ট জিতুন",
+    ref_banner_text: "বন্ধুদের রেফার করুন। ১০টি টি-শার্ট রেফার করলে ১টি টি-শার্ট ফ্রি।",
+    ref_text: "TWISTURE-এর রেফার প্রোগ্রামে আবেদন করুন। বাছাই হলে আমরা আপনাকে একটা রেফার কোড দেব। আপনার কোড দিয়ে কেউ অর্ডার করলে সে ছাড় পাবে, আর সেই টি-শার্ট আপনার নামে গোনা হবে।",
+    ref_step1: "নিচের ফর্মে আবেদন করুন। যাচাই করে আমরা আপনার WhatsApp বা ইমেইলে রেফার কোড পাঠাব।",
+    ref_step2: "বন্ধু বা পরিচিতকে কোডটা দিন। সে আমাদের ওয়েবসাইট, Facebook বা WhatsApp থেকে অর্ডারের সময় কোডটা দেবে।",
+    ref_step3: "ডেলিভারি হওয়া ১০টি টি-শার্ট পূর্ণ হলে আপনি ১টি টি-শার্ট ফ্রি পাবেন।",
+    ref_terms: "১. শুধু ডেলিভারি হয়ে যাওয়া অর্ডারের টি-শার্ট গোনা হবে। ফেরত বা বাতিল অর্ডার গোনা হবে না।\n২. নিজের কোড নিজে ব্যবহার করলে গোনা হবে না।\n৩. ১০টি টি-শার্ট পূর্ণ হলে আমাদের নির্ধারিত ডিজাইন থেকে ১টি টি-শার্ট ফ্রি পাবেন।\n৪. রেফার কোডের ছাড় ও মেয়াদ আমরা সময়মতো জানিয়ে দেব, প্রয়োজনে বদলাতে পারি।\n৫. সবাইকে রেফার কোড দেওয়া হয় না। আবেদন যাচাই করে আমরা কোড দেব।",
+    ref_done_text: "আপনার আবেদন পেয়েছি। যাচাই করে আপনার WhatsApp বা ইমেইলে রেফার কোড পাঠিয়ে দেব।",
     code_help: "কোড পেতে আমাদের Facebook page দেখুন বা ফলো করুন।",
     about_title: "আমাদের সম্পর্কে",
     about_text: "TWISTURE একটি বাংলাদেশি ক্লদিং ও অ্যাপারেল ব্র্যান্ড। জয়দেবপুর, গাজীপুর থেকে আমরা ট্রেন্ডি ডিজাইনের পোশাক নিয়ে কাজ করি। প্রতিটি কাপড়ের আসল ভিডিও দেখিয়ে আমরা চাই আপনি নিশ্চিন্তে বেছে নিতে পারেন।",
@@ -645,7 +707,7 @@ const FALLBACK_FABRICS = [{
 }];
 
 const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
-  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, codes: [], code: null, msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
+  ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, codes: [], code: null, refs: [], ref: null, rfId: "", msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const list = v => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -703,6 +765,7 @@ async function loadData() {
   } catch (e) { /* settings tab না থাকলে ডিফল্ট চলবে */ }
   try { const r = (await fetchRows(CONFIG.TAB_FAQ)).filter(x => x.question && x.answer); if (r.length) S.faq = r; } catch (e) {}
   try { S.reviews = (await fetchRows(CONFIG.TAB_REVIEWS)).filter(x => x.name && x.text); } catch (e) {}
+  try { S.refs = (await fetchRows(CONFIG.TAB_REFS)).filter(x => x.code); } catch (e) {}
   try { S.codes = (await fetchRows(CONFIG.TAB_CODES)).filter(x => x.code); } catch (e) {}
   try { S.videos = (await fetchRows(CONFIG.TAB_VIDEOS)).filter(x => ytId(x.url)); } catch (e) {}
   try { S.gallery = (await fetchRows(CONFIG.TAB_MEDIA)).filter(x => x.url && /^https?:/i.test(x.url)); } catch (e) {}
@@ -787,6 +850,8 @@ function renderStatic() {
     el.textContent = v; el.hidden = !v;
   });
   const form = hasForm();
+  $("rfFormEl").hidden = !form; document.querySelector("#rfMain .rf-h").hidden = !form; $("rfAlt").hidden = form;
+  $("rfWa").href = waLink("হ্যালো TWISTURE, আমি রেফার প্রোগ্রামে আবেদন করতে চাই।");
   $("formBtn").hidden = !form; $("orderBtn").hidden = form; $("waAlt").hidden = !form;
   $("altLead").textContent = form ? "চ্যাটে অর্ডার করতে চাইলে:" : "WhatsApp না থাকলে:";
   $("msgBtn").hidden = !messengerBase();
@@ -1106,10 +1171,39 @@ function newOrderId() {
   crypto.getRandomValues(new Uint8Array(6)).forEach(n => id += c[n % c.length]);
   return "TW-" + id;
 }
+function odTotals() {
+  const o = S.orderData, gross = o.unit_price * o.qty;
+  const refTotal = S.ref ? Math.round(o.unit_price * S.ref.pct / 100) * o.qty : 0;
+  const items = gross - o.code_discount - refTotal;
+  return {gross, refTotal, items, total: items + o.delivery_charge};
+}
+function renderOdSum() {
+  const o = S.orderData, t = odTotals();
+  $("odSum").innerHTML = `<b>${esc(o.design)}</b>${o.fabric ? ` · ${esc(o.fabric)}` : ""}<br>${esc(o.color)} · সাইজ ${esc(o.size)} · ${o.qty}টি<br>মূল্য ${money(t.gross)}${o.code_discount ? ` − কোড ${money(o.code_discount)}` : ""}${t.refTotal ? ` − রেফার ছাড় ${money(t.refTotal)}` : ""} + ডেলিভারি ${money(o.delivery_charge)} = <b>${money(t.total)}</b>`;
+}
+function checkRef(raw) {
+  const c = String(raw || "").trim().toUpperCase();
+  if (!c) return {err: "রেফার কোড লিখুন।"};
+  const row = S.refs.find(x => same(x.code, c));
+  if (!row) return {err: "ভুল রেফার কোড। আবার দেখে লিখুন।"};
+  if (!codeActive(row)) return {err: "এই রেফার কোডের মেয়াদ শেষ হয়েছে।"};
+  if (S.orderData.discount_code) return {err: "ডিসকাউন্ট কোড আগেই প্রয়োগ হয়েছে। ডিসকাউন্ট কোড ও রেফার কোড একসাথে চলে না।"};
+  const pct = Math.min(100, num(row.percent, 0));
+  if (pct <= 0) return {err: "ভুল রেফার কোড। আবার দেখে লিখুন।"};
+  return {code: String(row.code).trim().toUpperCase(), pct};
+}
+function applyRef() {
+  const r = checkRef($("refInput").value), m = $("refMsg");
+  S.ref = r.err ? null : r;
+  m.className = "code-msg " + (r.err ? "bad" : "ok");
+  m.textContent = r.err ? r.err : `✓ রেফার কোড ঠিক আছে। ${r.pct}% ছাড় যোগ হয়েছে।`;
+  renderOdSum();
+  return !r.err;
+}
 function openOrderDialog() {
   if (!S.ready || !S.orderData) return;
-  const o = S.orderData;
-  $("odSum").innerHTML = `<b>${esc(o.design)}</b>${o.fabric ? ` · ${esc(o.fabric)}` : ""}<br>${esc(o.color)} · সাইজ ${esc(o.size)} · ${o.qty}টি<br>মূল্য ${money(o.items_total)} + ডেলিভারি ${money(o.delivery_charge)} = <b>${money(o.total)}</b>`;
+  S.ref = null; $("refInput").value = ""; $("refMsg").textContent = ""; $("refMsg").className = "code-msg";
+  renderOdSum();
   $("odErr").textContent = ""; $("odForm").hidden = false; $("odDone").hidden = true;
   $("odSubmit").disabled = false; $("odSubmit").textContent = "অর্ডার নিশ্চিত করুন";
   $("orderDlg").showModal();
@@ -1127,12 +1221,16 @@ $("odFormEl").addEventListener("submit", async e => {
   if (name.length < 2) return odError("আপনার নাম লিখুন।", f.elements.name);
   if (!okPhone(phone)) return odError("সঠিক মোবাইল নম্বর দিন (যেমন 01712345678)।", f.elements.phone);
   if (address.length < 10) return odError("সম্পূর্ণ ঠিকানা লিখুন (এলাকা, থানা, জেলাসহ)।", f.elements.address);
+  const typed = $("refInput").value.trim();
+  if (typed && (!S.ref || !same(typed, S.ref.code)) && !applyRef()) return odError($("refMsg").textContent, $("refInput"));
   if (!S.pendingId) S.pendingId = newOrderId();
   const id = S.pendingId;
   if (fd.get("website")) { showDone(id, phone); return; }   /* spam trap */
   odError("");
   $("odSubmit").disabled = true; $("odSubmit").textContent = "পাঠানো হচ্ছে…";
-  const payload = {...S.orderData, order_id: id, name, phone, address, note: [note, S.orderData.code_note].filter(Boolean).join(" | "), page: location.href.split("#")[0], hp: ""};
+  const t = odTotals();
+  const refNote = S.ref ? `রেফার কোড ${S.ref.code} (−${S.ref.pct}%, −${money(t.refTotal)})` : "";
+  const payload = {...S.orderData, items_total: t.items, total: t.total, referral_code: S.ref ? S.ref.code : "", referral_percent: S.ref ? S.ref.pct : 0, referral_discount: t.refTotal, order_id: id, name, phone, address, note: [note, S.orderData.code_note, refNote].filter(Boolean).join(" | "), page: location.href.split("#")[0], hp: ""};
   try {
     await fetch(S.settings.order_endpoint.trim(), {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify(payload)});
     showDone(id, phone);
@@ -1148,6 +1246,39 @@ function showDone(id, phone) {
   $("odDoneMeta").textContent = `ডেলিভারি সময় ${S.settings.delivery_time}। ${S.settings.return_text}`;
   $("odWa").href = waLink(`হ্যালো TWISTURE, আমার অর্ডার নম্বর ${id}। অর্ডারটি নিয়ে জানতে চাই।`);
 }
+
+/* ---------- রেফার আবেদন ---------- */
+const mailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+function newRefId() { const c = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ"; let id = ""; crypto.getRandomValues(new Uint8Array(6)).forEach(n => id += c[n % c.length]); return "RF-" + id; }
+function rfError(msg, field) { $("rfErr").textContent = msg; if (field) field.focus(); }
+$("rfFormEl").addEventListener("input", () => { $("rfErr").textContent = ""; });
+$("rfFormEl").addEventListener("submit", async e => {
+  e.preventDefault();
+  const f = e.target, fd = new FormData(f);
+  const name = String(fd.get("name") || "").trim(), phone = normPhone(fd.get("whatsapp")), email = String(fd.get("email") || "").trim(), address = String(fd.get("address") || "").trim();
+  if (name.length < 2) return rfError("আপনার নাম লিখুন।", f.elements.name);
+  if (!okPhone(phone)) return rfError("সঠিক WhatsApp নম্বর দিন (যেমন 01712345678)।", f.elements.whatsapp);
+  if (!mailOk(email)) return rfError("সঠিক ইমেইল ঠিকানা দিন।", f.elements.email);
+  if (address.length < 10) return rfError("সম্পূর্ণ ঠিকানা লিখুন (এলাকা, থানা, জেলাসহ)।", f.elements.address);
+  const showDone = () => { S.rfId = ""; $("rfMain").hidden = true; $("rfDone").hidden = false; };
+  if (fd.get("website")) { showDone(); return; }
+  if (!S.rfId) S.rfId = newRefId();
+  $("rfSubmit").disabled = true; $("rfSubmit").textContent = "পাঠানো হচ্ছে…";
+  try {
+    await fetch(S.settings.order_endpoint.trim(), {method: "POST", mode: "no-cors", headers: {"Content-Type": "text/plain;charset=utf-8"}, body: JSON.stringify({kind: "referrer", ref_id: S.rfId, name, whatsapp: phone, email, address, page: location.href.split("#")[0], hp: ""})});
+    showDone();
+  } catch (err) {
+    $("rfSubmit").disabled = false; $("rfSubmit").textContent = "আবেদন করুন";
+    rfError("পাঠানো যায়নি। ইন্টারনেট দেখে আবার চেষ্টা করুন।");
+  }
+});
+$("refOpen").onclick = () => $("refDlg").showModal();
+$("rfOk").onclick = () => $("refDlg").close();
+$("refDlg").addEventListener("click", e => { if (e.target === $("refDlg")) $("refDlg").close(); });
+$("refDlg").addEventListener("close", () => { $("rfMain").hidden = false; $("rfDone").hidden = true; $("rfSubmit").disabled = false; $("rfSubmit").textContent = "আবেদন করুন"; });
+$("refApply").onclick = applyRef;
+$("refInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); applyRef(); } });
+$("refInput").addEventListener("input", () => { if (S.ref && !same($("refInput").value, S.ref.code)) { S.ref = null; $("refMsg").textContent = ""; $("refMsg").className = "code-msg"; renderOdSum(); } });
 
 function messengerBase() {
   const s = S.settings;
