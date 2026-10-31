@@ -211,6 +211,34 @@ dialog{overflow-x:hidden}
 .img-dlg .od{padding:16px}
 .img-dlg img{width:100%;max-height:78vh;object-fit:contain;border-radius:6px;background:var(--tee)}
 
+.searchbar{position:relative;margin:0 0 10px}
+.searchbar input{width:100%;padding:14px 46px 14px 48px;border:2px solid var(--line);border-radius:999px;background:#fff;font:inherit;font-size:16px;color:var(--ink);-webkit-appearance:none;appearance:none}
+.searchbar input::-webkit-search-cancel-button{display:none}
+.searchbar .si{position:absolute;left:18px;top:50%;width:20px;height:20px;margin-top:-10px;fill:var(--ink);pointer-events:none}
+.sclear{position:absolute;right:8px;top:50%;margin-top:-18px;width:36px;height:36px;border:0;border-radius:50%;background:#e7e6df;font-size:20px;line-height:1}
+.popular{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 14px;font-size:14px;color:var(--muted)}
+.popular button{border:1.5px solid var(--line);background:transparent;border-radius:999px;padding:3px 12px;font-weight:600;font-size:14px}
+.popular button:hover{background:var(--tee);color:var(--paper)}
+.search-info{margin:4px 0 12px;font-weight:600}
+.search-info .alt-btn{padding:3px 10px}
+.subrow{display:flex;gap:14px;overflow-x:auto;padding:4px 2px 14px;margin:0 0 4px;scrollbar-width:none}
+.subrow::-webkit-scrollbar{display:none}
+.sub{flex:none;width:74px;border:0;background:transparent;text-align:center;padding:0;font:inherit}
+.sub-img{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 6px;border-radius:50%;border:2px solid var(--line);background:var(--tee);overflow:hidden;color:var(--paper);font-weight:700;font-size:15px}
+.sub-img img{width:100%;height:100%;object-fit:cover;object-position:left center}
+.sub-img img.fit{object-fit:contain;object-position:center;padding:6px}
+.sub.on .sub-img{box-shadow:0 0 0 3px var(--concrete),0 0 0 5px var(--cobalt)}
+.sub-name{display:block;font-size:13px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
+.sub-n{display:block;font-size:12px;color:var(--muted)}
+.empty{grid-column:1/-1;padding:26px 16px;text-align:center;border:1.5px dashed #9a9993;border-radius:10px;line-height:1.6}
+.empty b{display:block;font-family:var(--display);font-size:18px;margin-bottom:4px}
+.empty span{display:block;color:var(--muted);margin-bottom:8px}
+.empty div{margin-top:8px}
+.empty .alt-btn{margin:4px 3px}
+.icon-btn{width:42px;padding:0;justify-content:center;background:transparent;cursor:pointer}
+.icon-btn svg{width:18px;height:18px;fill:var(--ink)}
+.icon-btn:hover svg{fill:var(--paper)}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -358,6 +386,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <a class="brand" href="#top" aria-label="TWISTURE হোম"><span class="logo" role="img" aria-label="TWISTURE লোগো"></span><span class="mark">TWISTURE</span></a>
     <div class="hdr-actions">
       <a class="btn-line" id="hdrWa" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <button type="button" class="btn-line icon-btn" id="hdrSearch" aria-label="ডিজাইন খুঁজুন"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg></button>
       <button type="button" class="btn-line menu-btn" id="menuBtn" aria-haspopup="dialog"><span class="dots" aria-hidden="true">⋮</span> মেনু</button>
     </div>
   </div>
@@ -398,8 +427,16 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <div class="wrap">
       <h2 class="section-h" data-s="shop_title"></h2>
       <p class="section-sub" data-s="shop_text"></p>
+      <div class="searchbar" id="searchBar" role="search">
+        <svg class="si" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 2a8 8 0 1 0 4.9 14.3l5.4 5.4 1.4-1.4-5.4-5.4A8 8 0 0 0 10 2zm0 2a6 6 0 1 1 0 12 6 6 0 0 1 0-12z"/></svg>
+        <input id="searchInput" type="search" enterkeyhint="search" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="ডিজাইন খুঁজুন">
+        <button type="button" class="sclear" id="searchClear" aria-label="সার্চ মুছুন" hidden>×</button>
+      </div>
+      <div class="popular" id="popular" hidden></div>
+      <p class="search-info" id="searchInfo" hidden></p>
       <div class="filters types" id="typeFilters" role="group" aria-label="প্রোডাক্টের ধরন" hidden></div>
       <div class="filters" id="filters" role="group" aria-label="ক্যাটাগরি"></div>
+      <div class="subrow" id="subRow" role="group" aria-label="সিরিজ বা চরিত্র" hidden></div>
       <div class="grid" id="grid" aria-live="polite">
         <div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div>
       </div>
@@ -544,6 +581,7 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <h2>মেনু</h2>
     <nav class="mn-list">
       <a class="mn-item" href="#shop" data-close>কালেকশন</a>
+      <button type="button" class="mn-item" data-act="search">ডিজাইন খুঁজুন</button>
       <a class="mn-item" href="#fabric" data-close>কাপড় দেখুন</a>
       <button type="button" class="mn-item" data-open="refDlg"><span data-s="ref_title"></span></button>
       <button type="button" class="mn-item" data-open="customDlg">পছন্দের ডিজাইন বানিয়ে নিন</button>
@@ -668,6 +706,7 @@ const CONFIG = {
   TAB_VIDEOS: "videos",
   TAB_CODES: "codes",
   TAB_REFS: "referrals",
+  TAB_SUBCATS: "subcats",
   defaults: {
     whatsapp: "8801606391253",
     delivery_time: "3-4 দিন",
@@ -741,7 +780,7 @@ const FALLBACK_FABRICS = [{
   note: "ওভারসাইজড ড্রপ শোল্ডার ফিট", photos: "", colors: "", size: ""
 }];
 
-const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব",
+const S = {designs: [], fabrics: [], settings: {...CONFIG.defaults}, filter: "সব", sub: "সব", q: "", results: [], subcats: [],
   ready: false, orderData: null, pendingId: "", page: 1, type: "সব", variants: [], gallery: [], videos: [], vlist: [], vi: 0, codes: [], code: null, refs: [], ref: null, rfId: "", msg: "", faq: [], reviews: [], current: null, fabs: [], gsm: "", color: "", size: "", area: "", qty: 1, media: "", stageKey: "", fabView: ""};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -785,7 +824,7 @@ const CACHE_KEY = "tw_cache_v2";
 async function fetchAll() {
   if (!CONFIG.SHEET_ID) return null;
   const tabs = {designs: CONFIG.TAB_DESIGNS, fabrics: CONFIG.TAB_FABRICS, settings: CONFIG.TAB_SETTINGS, faq: CONFIG.TAB_FAQ, reviews: CONFIG.TAB_REVIEWS,
-    refs: CONFIG.TAB_REFS, codes: CONFIG.TAB_CODES, videos: CONFIG.TAB_VIDEOS, gallery: CONFIG.TAB_MEDIA, variants: CONFIG.TAB_VARIANTS};
+    refs: CONFIG.TAB_REFS, codes: CONFIG.TAB_CODES, videos: CONFIG.TAB_VIDEOS, gallery: CONFIG.TAB_MEDIA, variants: CONFIG.TAB_VARIANTS, subcats: CONFIG.TAB_SUBCATS};
   const keys = Object.keys(tabs);
   const res = await Promise.all(keys.map(k => fetchRows(tabs[k]).catch(() => null)));   /* সবগুলো একসাথে আনা হয় */
   const raw = {}; keys.forEach((k, i) => raw[k] = res[i]);
@@ -805,6 +844,7 @@ function applyData(raw) {
   S.videos = (raw.videos || []).filter(x => ytId(x.url));
   S.gallery = (raw.gallery || []).filter(x => x.url && /^https?:/i.test(x.url));
   S.variants = (raw.variants || []).filter(x => x.id && x.color && (x.mockup || x.image));
+  S.subcats = (raw.subcats || []).filter(x => x.subcategory && x.cover);
 }
 const loadCache = () => { try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) { return null; } };
 const saveCache = raw => { try { localStorage.setItem(CACHE_KEY, JSON.stringify(raw)); } catch (e) {} };
@@ -955,14 +995,117 @@ function heroAction(a, b) {
   if (/^https?:/i.test(a)) window.open(a, "_blank", "noopener");
 }
 
+/* ---------- সার্চ (বানান ভুল হলেও খোঁজে) ---------- */
+const fold = v => String(v || "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^\p{L}\p{M}\p{N}\s]/gu, " ").replace(/\s+/g, " ").trim();
+const squash = v => v.replace(/(.)\1+/g, "$1");
+function dl(a, b, max) {
+  const n = a.length, m = b.length;
+  if (Math.abs(n - m) > max) return max + 1;
+  const d = Array.from({length: n + 1}, (_, i) => [i]);
+  for (let j = 1; j <= m; j++) d[0][j] = j;
+  for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++) {
+    d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+  }
+  return d[n][m];
+}
+const typoLimit = len => len <= 3 ? 0 : len <= 5 ? 1 : len <= 8 ? 2 : 3;
+function wordsOf(d) {
+  if (d._ix) return d._ix;
+  const set = new Set();
+  [d.name, d.category, d.subcategory, d.type, d.tags].forEach(p => fold(p).split(" ").filter(Boolean).forEach(w => set.add(squash(w))));
+  [d.name, d.subcategory, ...String(d.tags || "").split(",")].forEach(p => { const c = squash(fold(p).replace(/ /g, "")); if (c.length >= 3) set.add(c); });
+  return d._ix = [...set];
+}
+function tokenScore(q, words) {
+  const t = typoLimit(q.length); let best = 0;
+  for (const w of words) {
+    let sc = 0;
+    if (w === q) sc = 100;
+    else if (q.length >= 2 && w.startsWith(q)) sc = 85;
+    else if (q.length >= 3 && w.includes(q)) sc = 65;
+    else if (w.length >= 4 && q.length > w.length && q.startsWith(w)) sc = 55;
+    else if (q.length >= 4) {
+      const d1 = dl(q, w, t);
+      if (d1 <= t) sc = 75 - d1 * 10;
+      else { const lim = Math.min(t, 1), d2 = dl(q, w.slice(0, q.length), lim); if (d2 <= lim) sc = 50 - d2 * 5; }
+    }
+    if (sc > best) best = sc;
+    if (best === 100) break;
+  }
+  return best;
+}
+function searchDesigns(query) {
+  const toks = fold(query).split(" ").filter(Boolean).map(squash);
+  if (!toks.length) return [];
+  const rows = S.designs.map(d => ({d, sc: toks.map(t => tokenScore(t, wordsOf(d)))}));
+  let hit = rows.filter(r => r.sc.every(x => x > 0));
+  if (!hit.length && toks.length > 1) hit = rows.filter(r => r.sc.some(x => x > 0));
+  return hit.map(r => ({d: r.d, s: r.sc.reduce((a, b) => a + b, 0)})).sort((a, b) => b.s - a.s).map(x => x.d);
+}
+function suggest(query) {
+  const q = squash(fold(query).replace(/ /g, ""));
+  if (q.length < 3) return "";
+  const terms = new Map();
+  S.designs.forEach(d => [d.subcategory, d.name, ...String(d.tags || "").split(",")].forEach(p => { const disp = String(p || "").trim(), c = squash(fold(disp).replace(/ /g, "")); if (disp && c.length >= 3) terms.set(c, disp); }));
+  if (terms.has(q)) return "";
+  const lim = Math.max(1, typoLimit(q.length)); let best = "", bd = 99;
+  terms.forEach((disp, c) => { const dd = dl(q, c, lim + 1); if (dd < bd) { bd = dd; best = disp; } });
+  return bd <= lim ? best : "";
+}
+function popularTerms() {
+  const m = new Map();
+  S.designs.forEach(d => { const k = String(d.subcategory || "").trim(); if (k) m.set(k, (m.get(k) || 0) + 1); });
+  return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6).map(x => x[0]);
+}
+function renderSubRow() {
+  const row = $("subRow");
+  if (S.q || S.filter === "সব") { row.hidden = true; return; }
+  const groups = new Map();
+  S.designs.filter(d => (S.type === "সব" || d.type === S.type) && d.category === S.filter).forEach(d => {
+    const k = String(d.subcategory || "").trim(); if (!k) return;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(d);
+  });
+  if (groups.size < 2) { row.hidden = true; return; }
+  if (S.sub !== "সব" && !groups.has(S.sub)) S.sub = "সব";
+  const total = [...groups.values()].reduce((a, l) => a + l.length, 0);
+  const cover = (name, list) => {
+    const o = S.subcats.find(x => same(x.subcategory, name)); if (o) return {src: o.cover, fit: true};
+    const d = list.find(x => x.image) || list[0];
+    return d.image ? {src: d.image, fit: true} : {src: d.mockup, fit: false};
+  };
+  const tile = (key, label, n, c) => `<button type="button" class="sub${S.sub === key ? " on" : ""}" data-sub="${esc(key)}" aria-pressed="${S.sub === key}"><span class="sub-img">${c ? `<img loading="lazy" decoding="async" class="${c.fit ? "fit" : ""}" src="${esc(opt(c.src, 160))}" alt="">` : "সব"}</span><span class="sub-name">${esc(label)}</span><span class="sub-n">${n}টি</span></button>`;
+  row.innerHTML = tile("সব", "সব " + S.filter, total, null) + [...groups.entries()].sort((a, b) => b[1].length - a[1].length).map(([k, l]) => tile(k, k, l.length, cover(k, l))).join("");
+  row.hidden = false;
+}
+function renderSearch() {
+  S.results = S.q ? searchDesigns(S.q) : [];
+  const pop = popularTerms(), inp = $("searchInput");
+  inp.placeholder = S.settings.search_placeholder || (pop.length ? `ডিজাইন খুঁজুন, যেমন ${pop[0]}` : "ডিজাইন খুঁজুন");
+  if (document.activeElement !== inp) inp.value = S.q;
+  $("searchClear").hidden = !S.q;
+  $("popular").hidden = !pop.length;
+  $("popular").innerHTML = pop.length ? `<span>জনপ্রিয়:</span>` + pop.map(t => `<button type="button" data-q="${esc(t)}">${esc(t)}</button>`).join("") : "";
+  const info = $("searchInfo"), sg = S.q ? suggest(S.q) : "";
+  info.hidden = !S.q || !S.results.length;
+  if (!info.hidden) info.innerHTML = `“${esc(S.q)}” এর জন্য ${S.results.length}টি ডিজাইন${sg ? ` · আপনি কি খুঁজছেন: <button type="button" class="alt-btn" data-q="${esc(sg)}">${esc(sg)}</button>?` : ""}`;
+  renderSubRow();
+}
+function setQuery(v) { $("searchInput").value = v; S.q = String(v).trim(); S.page = 1; renderSearch(); renderFilters(); renderGrid(); }
+function focusSearch() {
+  $("searchBar").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center"});
+  setTimeout(() => $("searchInput").focus({preventScroll: true}), 450);
+}
+
 function renderFilters() {
   const chip = (t, on, attr) => `<button type="button" class="chip-f" aria-pressed="${on}" data-${attr}="${esc(t)}">${esc(t)}</button>`;
   const types = [...new Set(S.designs.map(d => d.type).filter(Boolean))];
-  $("typeFilters").hidden = types.length < 2;
+  $("typeFilters").hidden = types.length < 2 || !!S.q;
   $("typeFilters").innerHTML = ["সব", ...types].map(t => chip(t, t === S.type, "t")).join("");
   const pool = S.designs.filter(d => S.type === "সব" || d.type === S.type);
   const cats = ["সব", ...new Set(pool.map(d => d.category).filter(Boolean))];
-  $("filters").hidden = cats.length < 3;
+  $("filters").hidden = cats.length < 3 || !!S.q;
   $("filters").innerHTML = cats.map(c => chip(c, c === S.filter, "c")).join("");
 }
 
@@ -974,8 +1117,14 @@ function pageList(cur, total) {
 }
 
 function renderGrid() {
-  const all = S.designs.filter(d => (S.type === "সব" || d.type === S.type) && (S.filter === "সব" || d.category === S.filter));
-  if (!all.length) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; $("pager").hidden = true; return; }
+  const all = S.q ? S.results : S.designs.filter(d => (S.type === "সব" || d.type === S.type) && (S.filter === "সব" || d.category === S.filter) && (S.sub === "সব" || String(d.subcategory || "").trim() === S.sub));
+  if (!all.length) {
+    $("pager").hidden = true;
+    if (!S.q) { $("grid").innerHTML = `<p class="state">এই ক্যাটাগরিতে এখন কোনো ডিজাইন নেই।</p>`; return; }
+    const pop = popularTerms(), sg = suggest(S.q);
+    $("grid").innerHTML = `<div class="empty"><b>“${esc(S.q)}” নামে কিছু পাওয়া যায়নি</b><span>বানান আবার দেখুন, অথবা অন্য নামে চেষ্টা করুন।</span>${sg ? `<div>আপনি কি খুঁজছেন: <button type="button" class="alt-btn" data-q="${esc(sg)}">${esc(sg)}</button></div>` : ""}${pop.length ? `<div>${pop.map(t => `<button type="button" class="alt-btn" data-q="${esc(t)}">${esc(t)}</button>`).join("")}</div>` : ""}<div><button type="button" class="alt-btn" data-open="customDlg">পছন্দের ডিজাইন বানিয়ে নিন</button></div></div>`;
+    return;
+  }
   const size = Math.max(2, Math.round(num(S.settings.page_size, 12)));
   const pages = Math.ceil(all.length / size);
   S.page = Math.min(Math.max(1, S.page), pages);
@@ -988,7 +1137,7 @@ function renderGrid() {
         ${d.badge ? `<span class="badge">${esc(d.badge)}</span>` : ""}
         ${isSold(d) ? `<span class="soldout-flag">স্টক শেষ</span>` : ""}
       </span>
-      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-price">${priceHtml(d)}</span><span class="card-cat">${esc([d.type, d.category].filter(Boolean).join(" · "))}</span>${list(d.colors).length > 1 ? `<span class="sw" aria-label="কালার: ${esc(list(d.colors).join(", "))}">${list(d.colors).slice(0, 6).map(c => `<i class="dot sm" style="background:${COLORS[c.toLowerCase()] || "#bbb"}"></i>`).join("")}</span>` : ""}</span>
+      <span class="card-body"><h3 class="card-name">${esc(d.name)}</h3><span class="card-price">${priceHtml(d)}</span><span class="card-cat">${esc([d.type, d.category, d.subcategory].filter(Boolean).join(" · "))}</span>${list(d.colors).length > 1 ? `<span class="sw" aria-label="কালার: ${esc(list(d.colors).join(", "))}">${list(d.colors).slice(0, 6).map(c => `<i class="dot sm" style="background:${COLORS[c.toLowerCase()] || "#bbb"}"></i>`).join("")}</span>` : ""}</span>
     </button>`;
   }).join("");
   const pg = $("pager");
@@ -1178,8 +1327,8 @@ function updateOrder() {
 
 /* ---------- events ---------- */
 const openById = id => { const d = S.designs.find(x => String(x.id || x.name) === id); if (d) openSheet(d); };
-$("typeFilters").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (!b) return; S.type = b.dataset.t; S.filter = "সব"; S.page = 1; renderFilters(); renderGrid(); });
-$("filters").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (!b) return; S.filter = b.dataset.c; S.page = 1; renderFilters(); renderGrid(); });
+$("typeFilters").addEventListener("click", e => { const b = e.target.closest("button[data-t]"); if (!b) return; S.type = b.dataset.t; S.filter = "সব"; S.sub = "সব"; S.page = 1; renderFilters(); renderSubRow(); renderGrid(); });
+$("filters").addEventListener("click", e => { const b = e.target.closest("button[data-c]"); if (!b) return; S.filter = b.dataset.c; S.sub = "সব"; S.page = 1; renderFilters(); renderSubRow(); renderGrid(); });
 $("grid").addEventListener("click", e => { const b = e.target.closest(".card"); if (b) openById(b.dataset.id); });
 $("pager").addEventListener("click", e => {
   const b = e.target.closest("button[data-p]"); if (!b || b.disabled) return;
@@ -1194,11 +1343,22 @@ $("menuDlg").addEventListener("click", e => {
   if (e.target === $("menuDlg")) { $("menuDlg").close(); return; }
   const a = e.target.closest("a[data-close]");
   if (a) { e.preventDefault(); $("menuDlg").close(); const t = document.querySelector(a.getAttribute("href")); if (t) t.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}); return; }
+  if (e.target.closest("[data-act=\"search\"]")) { $("menuDlg").close(); focusSearch(); return; }
   const o = e.target.closest("[data-open]");
   if (o) { $("menuDlg").close(); $(o.dataset.open).showModal(); }
 });
 document.querySelectorAll("dialog .close[data-x]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
 ["aboutDlg", "customDlg"].forEach(id => $(id).addEventListener("click", e => { if (e.target === $(id)) $(id).close(); }));
+let _qt;
+$("searchInput").addEventListener("input", e => { clearTimeout(_qt); _qt = setTimeout(() => { S.q = e.target.value.trim(); S.page = 1; renderSearch(); renderFilters(); renderGrid(); }, 130); });
+$("searchInput").addEventListener("keydown", e => { if (e.key === "Enter") e.target.blur(); });
+$("searchClear").onclick = () => { setQuery(""); $("searchInput").focus(); };
+$("hdrSearch").onclick = focusSearch;
+["popular", "searchInfo", "grid"].forEach(id => $(id).addEventListener("click", e => {
+  const b = e.target.closest("[data-q]"); if (b) { setQuery(b.dataset.q); return; }
+  const o = e.target.closest("[data-open]"); if (o && id === "grid") $(o.dataset.open).showModal();
+}));
+$("subRow").addEventListener("click", e => { const b = e.target.closest("button[data-sub]"); if (!b) return; S.sub = b.dataset.sub; S.page = 1; renderSubRow(); renderGrid(); });
 $("heroCard").addEventListener("click", e => heroAction(e.currentTarget.dataset.action || "", e.currentTarget));
 document.querySelectorAll(".promo[data-open]").forEach(b => b.addEventListener("click", () => $(b.dataset.open).showModal()));
 $("imgDlg").addEventListener("click", e => { if (e.target === $("imgDlg") || e.target.closest(".close")) $("imgDlg").close(); });
@@ -1358,8 +1518,9 @@ $("closeBtn").onclick = () => $("sheet").close();
 $("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").close(); });
 $("sheet").addEventListener("close", () => { document.body.classList.remove("lock"); $("stage").innerHTML = ""; S.stageKey = ""; });
 
-function renderAll() { renderStatic(); renderHero(); renderFilters(); renderGrid(); renderFabric(); renderFaq(); renderReviews(); }
+function renderAll() { renderStatic(); renderHero(); renderSearch(); renderFilters(); renderGrid(); renderFabric(); renderFaq(); renderReviews(); }
 (async function init() {
+  S.q = (new URLSearchParams(location.search).get("q") || "").trim().slice(0, 60);
   const cached = loadCache();
   if (cached && cached.designs) { applyData(cached); renderAll(); }   /* আগের বার দেখা তথ্য সাথে সাথে দেখাই */
   const fresh = await fetchAll();                                       /* তারপর নতুন তথ্য এনে দরকার হলে বদলাই */
