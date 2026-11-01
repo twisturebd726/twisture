@@ -239,6 +239,15 @@ dialog{overflow-x:hidden}
 .icon-btn svg{width:18px;height:18px;fill:var(--ink)}
 .icon-btn:hover svg{fill:var(--paper)}
 
+.price-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px}
+.price-row .sheet-price{margin:0}
+.share-btn{display:inline-flex;align-items:center;gap:6px;flex:none;border:1.5px solid var(--line);border-radius:999px;background:transparent;padding:5px 12px;font-weight:600;font-size:14px;cursor:pointer}
+.share-btn svg{width:16px;height:16px;fill:var(--ink)}
+.share-btn:hover{background:var(--tee);color:var(--paper)}
+.share-btn:hover svg{fill:var(--paper)}
+.share-msg{min-height:0;margin:-6px 0 12px;font-size:14px;color:var(--wa);font-weight:600}
+.share-msg:empty{display:none}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -518,7 +527,11 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
     <form class="sheet-form" id="orderForm" onsubmit="return false">
       <button type="button" class="close" id="closeBtn" aria-label="বন্ধ করুন">×</button>
       <h2 id="sheetName"></h2>
-      <p class="sheet-price" id="sheetPrice"></p>
+      <div class="price-row">
+        <p class="sheet-price" id="sheetPrice"></p>
+        <button type="button" class="share-btn" id="shareBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l4 4-1.4 1.4L13 6.8V15h-2V6.8L9.4 8.4 8 7l4-4zM5 11h3v2H7v6h10v-6h-1v-2h3v10H5V11z"/></svg>শেয়ার করুন</button>
+      </div>
+      <p class="share-msg" id="shareMsg" role="status"></p>
 
       <fieldset id="gsmField"><legend>কাপড়</legend><div class="opts" id="gsmOpts"></div></fieldset>
       <fieldset><legend>কালার</legend><div class="opts" id="colorOpts"></div></fieldset>
@@ -1267,7 +1280,7 @@ function applyCode() {
 
 function openSheet(d) {
   S.code = null; $("codeInput").value = ""; $("codeMsg").textContent = ""; $("codeMsg").className = "code-msg"; $("codeBox").open = false; $("codeBox").hidden = !list(d.code).length;
-  S.current = d; S.qty = 1; S.color = ""; S.size = ""; S.area = ""; S.media = ""; S.stageKey = "";
+  $("shareMsg").textContent = ""; S.current = d; S.qty = 1; S.color = ""; S.size = ""; S.area = ""; S.media = ""; S.stageKey = "";
   S.fabs = fabricsFor(d);
   const first = S.fabs.find(f => inStock(d, f)) || S.fabs[0];
   S.gsm = first ? gsmKey(first) : "";
@@ -1490,6 +1503,33 @@ $("refApply").onclick = applyRef;
 $("refInput").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); applyRef(); } });
 $("refInput").addEventListener("input", () => { if (S.ref && !same($("refInput").value, S.ref.code)) { S.ref = null; $("refMsg").textContent = ""; $("refMsg").className = "code-msg"; renderOdSum(); } });
 
+/* ---------- ডিজাইন শেয়ার ও সরাসরি লিংক ---------- */
+function designLink(d) {
+  const u = new URL(location.href); u.search = ""; u.hash = "";
+  u.searchParams.set("d", String(d.id || d.name)); u.searchParams.set("src", "share");
+  return u.toString();
+}
+let _sm;
+$("shareBtn").addEventListener("click", async () => {
+  const d = S.current; if (!d) return;
+  const url = designLink(d), text = `TWISTURE-এ এই ডিজাইনটা দেখুন: ${d.name}`, msg = $("shareMsg");
+  if (navigator.share) {
+    try { await navigator.share({title: `${d.name} | TWISTURE`, text, url}); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  const done = () => { msg.textContent = "লিংক কপি হয়েছে ✓ এখন যেকোনো জায়গায় পেস্ট করুন।"; clearTimeout(_sm); _sm = setTimeout(() => { msg.textContent = ""; }, 3500); };
+  try { await navigator.clipboard.writeText(url); done(); }
+  catch (e) { const t = document.createElement("textarea"); t.value = url; document.body.appendChild(t); t.select(); try { document.execCommand("copy"); done(); } catch (e2) { msg.textContent = url; } t.remove(); }
+});
+function openFromLink() {
+  if (S._linked) return;
+  const k = new URLSearchParams(location.search).get("d");
+  if (!k) { S._linked = true; return; }
+  const kk = fold(k).replace(/ /g, "-");
+  const d = S.designs.find(x => String(x.id || x.name) === k || fold(x.name).replace(/ /g, "-") === kk);
+  if (d) { S._linked = true; openSheet(d); }
+}
+
 function messengerBase() {
   const s = S.settings;
   if (s.messenger) return s.messenger.trim().replace(/\/+$/, "");
@@ -1518,7 +1558,7 @@ $("closeBtn").onclick = () => $("sheet").close();
 $("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").close(); });
 $("sheet").addEventListener("close", () => { document.body.classList.remove("lock"); $("stage").innerHTML = ""; S.stageKey = ""; });
 
-function renderAll() { renderStatic(); renderHero(); renderSearch(); renderFilters(); renderGrid(); renderFabric(); renderFaq(); renderReviews(); }
+function renderAll() { renderStatic(); renderHero(); renderSearch(); renderFilters(); renderGrid(); renderFabric(); renderFaq(); renderReviews(); openFromLink(); }
 (async function init() {
   S.q = (new URLSearchParams(location.search).get("q") || "").trim().slice(0, 60);
   const cached = loadCache();
