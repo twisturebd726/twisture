@@ -248,6 +248,13 @@ dialog{overflow-x:hidden}
 .share-msg{min-height:0;margin:-6px 0 12px;font-size:14px;color:var(--wa);font-weight:600}
 .share-msg:empty{display:none}
 
+.related{grid-column:1/-1;padding:18px 18px 24px;border-top:1.5px solid var(--line);background:var(--paper)}
+.rel-h{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.25;margin:0 0 12px}
+.related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+@media(min-width:860px){.related-grid{grid-template-columns:repeat(4,1fr)}}
+.card.mini .card-name{font-size:14px}
+.card.mini .card-price b{font-size:14px}
+
 /* pager */
 .pager{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:26px 0 6px}
 .pg{min-width:44px;height:44px;padding:0 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--paper);font-weight:700}
@@ -578,6 +585,11 @@ legend{font-weight:700;margin-bottom:8px;padding:0}
         <p class="hint" id="hint" role="status"></p>
       </div>
     </form>
+    <section class="related" id="related" hidden>
+      <h3 class="rel-h" id="relTitle"></h3>
+      <div class="related-grid" id="relGrid"></div>
+      <button type="button" class="alt-btn" id="relAll" hidden></button>
+    </section>
   </div>
 </dialog>
 
@@ -1278,6 +1290,41 @@ function applyCode() {
   updateOrder();
 }
 
+/* ---------- এই সিরিজের আরও ডিজাইন ---------- */
+const miniCard = d => {
+  const src = d.mockup || d.image, contain = !d.mockup;
+  return `<button type="button" class="card mini" data-rid="${esc(d.id || d.name)}"><span class="card-img"><img loading="lazy" decoding="async" class="${contain ? "contain" : ""}" src="${esc(opt(src, 400))}" alt="${esc(d.name)}">${isSold(d) ? '<span class="soldout-flag">স্টক শেষ</span>' : ""}</span><span class="card-body"><span class="card-name">${esc(d.name)}</span><span class="card-price">${priceHtml(d)}</span></span></button>`;
+};
+function renderRelated(d) {
+  const box = $("related"), st = S.settings, n = Math.max(2, Math.min(8, Math.round(num(st.related_count, 4))));
+  const key = x => String(x.id || x.name), others = S.designs.filter(x => key(x) !== key(d));
+  const sub = String(d.subcategory || "").trim(), cat = String(d.category || "").trim();
+  let pool = sub ? others.filter(x => String(x.subcategory || "").trim() === sub) : [], title, all = "";
+  if (pool.length) {
+    title = (st.related_title || "{name} সিরিজের আরও ডিজাইন").replace("{name}", sub);
+    all = (st.related_all || "সব {name} ডিজাইন দেখুন").replace("{name}", sub);
+  } else {
+    pool = cat ? others.filter(x => String(x.category || "").trim() === cat) : [];
+    title = (st.related_title_cat || "আরও {name} ডিজাইন").replace("{name}", cat);
+  }
+  pool = [...pool.filter(x => !isSold(x)), ...pool.filter(isSold)].slice(0, n);
+  box.hidden = !pool.length;
+  if (!pool.length) return;
+  $("relTitle").textContent = title;
+  $("relGrid").innerHTML = pool.map(miniCard).join("");
+  S.relAll = all ? sub : "";
+  $("relAll").hidden = !all; $("relAll").textContent = all;
+}
+$("relGrid").addEventListener("click", e => {
+  const b = e.target.closest("[data-rid]"); if (!b) return;
+  const d = S.designs.find(x => String(x.id || x.name) === b.dataset.rid); if (d) openSheet(d);
+});
+$("relAll").addEventListener("click", () => {
+  if (!S.relAll) return;
+  $("sheet").close(); setQuery(S.relAll);
+  $("shop").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+});
+
 function openSheet(d) {
   S.code = null; $("codeInput").value = ""; $("codeMsg").textContent = ""; $("codeMsg").className = "code-msg"; $("codeBox").open = false; $("codeBox").hidden = !list(d.code).length;
   $("shareMsg").textContent = ""; S.current = d; S.qty = 1; S.color = ""; S.size = ""; S.area = ""; S.media = ""; S.stageKey = "";
@@ -1293,7 +1340,8 @@ function openSheet(d) {
   $("areaOpts").innerHTML = radios("area", [{v: "in", t: "গাজীপুরের ভেতরে"}, {v: "out", t: "গাজীপুরের বাইরে"}]);
   renderOptions(); renderMedia(); updateOrder();
   document.body.classList.add("lock");
-  $("sheet").showModal();
+  renderRelated(d);
+  if (!$("sheet").open) $("sheet").showModal();
   $("sheet").scrollTop = 0;
 }
 
